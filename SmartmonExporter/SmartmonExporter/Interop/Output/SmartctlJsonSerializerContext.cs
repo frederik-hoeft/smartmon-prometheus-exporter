@@ -4,5 +4,5 @@ using System.Text.Json.Serialization;
 
 namespace SmartmonExporter.Interop.Output;
 
-[JsonSerializable(typeof(VersionRoot))]
+[JsonSerializable(typeof(SmartctlVersion))]
 internal sealed partial class SmartctlJsonSerializerContext : JsonSerializerContext;
