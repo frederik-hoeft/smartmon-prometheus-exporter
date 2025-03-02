@@ -5,7 +5,7 @@ namespace SmartmonExporter.Interop;
 
 internal sealed class DefaultChildProcessRunner : IChildProcessRunner
 {
-    public async Task<int> RunAsync(string command, string[] arguments, Out<string> output, CancellationToken cancellationToken)
+    public async Task<int> RunAsync(string command, ReadOnlyMemory<string> arguments, Out<string> output, CancellationToken cancellationToken)
     {
         ArgumentException.ThrowIfNullOrWhiteSpace(command, nameof(command));
 

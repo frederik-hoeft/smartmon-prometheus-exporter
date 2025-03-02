@@ -8,6 +8,8 @@ public class AppSettings : IRequireValidation
 
     public required string OutputPath { get; init; }
 
+    public string? PrometheusNamespace { get; init; }
+
     public void AssertIsValid() => _ = this is
     {
         OutputPath.Length: > 0,

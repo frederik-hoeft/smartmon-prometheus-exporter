@@ -2,5 +2,5 @@
 
 public interface IMetricsExporter
 {
-    Task<string> ExportAsync(string prometheusNamespace, IServiceProvider serviceProvider);
+    Task<string> ExportAsync(string prometheusNamespace, CancellationToken cancellationToken);
 }

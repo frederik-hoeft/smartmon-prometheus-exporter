@@ -1,4 +1,5 @@
 ﻿{
   "DebugMode": false,
-  "SmartctlPath": "/usr/sbin/smartctl"
+  "SmartctlPath": "/usr/sbin/smartctl",
+  "OutputPath": "/app/output"
 }

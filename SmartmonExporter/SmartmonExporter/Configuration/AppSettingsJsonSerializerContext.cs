@@ -2,7 +2,7 @@
 using System.Text.Json;
 using System.Text.Json.Serialization;
 
-namespace OrchestratorNg.Server.Configuration;
+namespace SmartmonExporter.Configuration;
 
 [JsonSourceGenerationOptions(ReadCommentHandling = JsonCommentHandling.Skip, UseStringEnumConverter = true)]
 [JsonSerializable(typeof(AppSettings))]

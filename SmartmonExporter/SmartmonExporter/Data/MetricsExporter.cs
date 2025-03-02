@@ -8,13 +8,13 @@ internal sealed class MetricsExporter(IEnumerable<IMetricsCollector> collectors)
 {
     private readonly ImmutableArray<IMetricsCollector> _collectors = collectors.CreatePipeline();
 
-    public async Task<string> ExportAsync(string prometheusNamespace, IServiceProvider serviceProvider)
+    public async Task<string> ExportAsync(string prometheusNamespace, CancellationToken cancellationToken)
     {
         PrometheusBuilder builder = new(prometheusNamespace, capacity: _collectors.Length * 256);
 
         foreach (IMetricsCollector collector in _collectors)
         {
-            await collector.CollectAsync(builder, serviceProvider);
+            await collector.CollectAsync(builder, cancellationToken);
         }
 
         string metrics = builder.Build();

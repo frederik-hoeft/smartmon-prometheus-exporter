@@ -1,5 +1,4 @@
-﻿using OrchestratorNg.Server.Configuration;
-using SmartmonExporter.Configuration.Model;
+﻿using SmartmonExporter.Configuration.Model;
 using SmartmonExporter.Configuration.Providers;
 using System.Text.Json;
 

@@ -1,4 +1,5 @@
 ﻿using SmartmonExporter.Configuration;
+using SmartmonExporter.Data;
 using System.Diagnostics.CodeAnalysis;
 
 namespace SmartmonExporter;
@@ -22,6 +23,14 @@ public class Commands
     public async Task Export(CancellationToken cancellationToken = default)
     {
         await using DefaultServiceProvider serviceProvider = await GetServiceProviderAsync(cancellationToken);
-
+        IConfiguration configuration = serviceProvider.GetService<IConfiguration>();
+        IMetricsExporter metricsExporter = serviceProvider.GetService<IMetricsExporter>();
+        string prometheusNamespace = "smartmon";
+        if (configuration.Settings.PrometheusNamespace is not null)
+        {
+            prometheusNamespace = $"{configuration.Settings.PrometheusNamespace}_{prometheusNamespace}";
+        }
+        string metrics = await metricsExporter.ExportAsync(prometheusNamespace, cancellationToken);
+        await File.WriteAllTextAsync(configuration.Settings.OutputPath, metrics, cancellationToken);
     }
 }
