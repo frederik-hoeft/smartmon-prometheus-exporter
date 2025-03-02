@@ -1,5 +1,4 @@
-﻿using System.Reflection.Metadata;
-using System.Text.Json.Serialization;
+﻿using System.Text.Json.Serialization;
 
 namespace SmartmonExporter.Interop.Output.Model;
 
@@ -29,11 +28,11 @@ public sealed record Smartctl
 
 public abstract record RootBase
 {
-    public required int[] JsonFormatVersion { get; init; }
+    public int[] JsonFormatVersion { get; set; } = null!;
 
-    public required Smartctl Smartctl { get; init; }
+    public Smartctl Smartctl { get; set; } = null!;
 
-    public LocalTime LocalTime { get; init; }
+    public LocalTime LocalTime { get; set; }
 }
 
 internal sealed record SmartctlVersion : RootBase;
@@ -44,7 +43,7 @@ internal sealed record Device(string Name, string InfoName, string Type, string 
 
 internal record SmartctlDevice : RootBase
 {
-    public required Device Device { get; init; }
+    public Device Device { get; init; } = null!;
 }
 
 internal sealed record UserCapacity(long Blocks, long Bytes);
@@ -75,15 +74,15 @@ internal sealed record SmartctlDeviceHealth(SmartStatus SmartStatus) : SmartctlD
 
 internal record SmartctlDeviceInfo : SmartctlDevice
 {
-    public required string ModelFamily { get; init; }
+    public string ModelFamily { get; init; } = null!;
 
-    public required string ModelName { get; init; }
+    public string ModelName { get; init; } = null!;
 
-    public required string SerialNumber { get; init; }
+    public string SerialNumber { get; init; } = null!;
 
-    public required string FirmwareVersion { get; init; }
+    public string FirmwareVersion { get; init; } = null!;
 
-    public required UserCapacity UserCapacity { get; init; }
+    public UserCapacity UserCapacity { get; init; } = null!;
 
     public int LogicalBlockSize { get; init; }
 
@@ -91,13 +90,13 @@ internal record SmartctlDeviceInfo : SmartctlDevice
 
     public int RotationRate { get; init; }
 
-    public required FormFactor FormFactor { get; init; }
+    public FormFactor FormFactor { get; init; } = null!;
 
-    public required Trim Trim { get; init; }
+    public Trim Trim { get; init; } = null!;
 
     public bool InSmartctlDatabase { get; init; }
 
-    public required SmartSupport SmartSupport { get; init; }
+    public SmartSupport SmartSupport { get; init; } = null!;
 }
 
 internal sealed record SmartctlSataDeviceInfo : SmartctlDeviceInfo

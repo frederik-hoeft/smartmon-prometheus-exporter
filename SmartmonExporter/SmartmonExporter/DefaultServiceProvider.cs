@@ -18,4 +18,4 @@ namespace SmartmonExporter;
 [Singleton<IChildProcessRunner, DefaultChildProcessRunner>]
 [Singleton<ISmartctlRunner, SmartctlRunner>]
 [Import<ISmartMetricsModule>]
-internal partial class DefaultServiceProvider;
+internal sealed partial class DefaultServiceProvider;

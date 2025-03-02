@@ -14,7 +14,7 @@ internal sealed class DefaultChildProcessRunner : IChildProcessRunner
             StartInfo = new ProcessStartInfo
             {
                 FileName = command,
-                Arguments = string.Join(' ', arguments),
+                Arguments = string.Join(' ', arguments.Span!),
                 RedirectStandardOutput = true,
                 RedirectStandardError = true,
                 UseShellExecute = false,

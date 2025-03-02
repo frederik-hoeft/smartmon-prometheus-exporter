@@ -1,0 +1,5 @@
+﻿{
+  "DebugMode": false,
+  "SmartctlPath": "/usr/sbin/smartctl",
+  "OutputPath": "/data/smartctl.prom"
+}

@@ -8,6 +8,7 @@ namespace SmartmonExporter.Data;
 [Singleton<IMetricsExporter, MetricsExporter>]
 [Singleton<IMetricsCollector, VersionCollector>]
 [Singleton<IMetricsCollector, SmartCollector>]
+[Singleton<IDeviceMetricCollector, TimestampCollector>]
 [Singleton<IDeviceMetricCollector, DeviceActiveCollector>]
 [Singleton<IDeviceMetricCollector, DeviceInfoCollector>]
 [Singleton<IDeviceMetricCollector, DeviceHealthCollector>]

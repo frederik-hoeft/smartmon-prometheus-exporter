@@ -38,13 +38,13 @@ internal sealed class SmartctlRunner(IConfiguration configuration, SmartctlJsonS
         {
             argsBuffer[nextIndex++] = device;
         }
-        ReadOnlyMemory<string> args = argsBuffer.AsMemory(0, nextIndex - 1);
+        ReadOnlyMemory<string> args = argsBuffer.AsMemory(0, nextIndex);
         string command = configuration.Settings.SmartctlPath;
         Out<string> output = new();
         int exitCode = await processRunner.RunAsync(command, args, output, cancellationToken);
         if (exitCode != 0)
         {
-            throw new InvalidOperationException($"smartctl failed with exit code {exitCode}");
+            throw new InvalidOperationException($"smartctl failed with exit code {exitCode} while running '{command} {string.Join(' ', args.Span!)}': {output.Value}");
         }
         if (!output.TryGetValue(out string? outputValue))
         {

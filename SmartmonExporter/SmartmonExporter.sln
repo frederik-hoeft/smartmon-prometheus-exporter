@@ -1,7 +1,7 @@
 ﻿
 Microsoft Visual Studio Solution File, Format Version 12.00
 # Visual Studio Version 17
-VisualStudioVersion = 17.13.35825.156 d17.13
+VisualStudioVersion = 17.13.35825.156
 MinimumVisualStudioVersion = 10.0.40219.1
 Project("{FAE04EC0-301F-11D3-BF4B-00C04F79EFBC}") = "SmartmonExporter", "SmartmonExporter\SmartmonExporter.csproj", "{F213540D-3E61-4DF1-818D-2668CF962B70}"
 EndProject
@@ -10,6 +10,8 @@ Project("{2150E333-8FDC-42A3-9474-1A3956D46DE8}") = "Solution Items", "Solution 
 		.editorconfig = .editorconfig
 		Directory.Build.props = Directory.Build.props
 	EndProjectSection
+EndProject
+Project("{FAE04EC0-301F-11D3-BF4B-00C04F79EFBC}") = "ConsoleApp1", "ConsoleApp1\ConsoleApp1.csproj", "{CE6E845D-87AD-49BA-B427-1FDFECF856E7}"
 EndProject
 Global
 	GlobalSection(SolutionConfigurationPlatforms) = preSolution
@@ -21,6 +23,10 @@ Global
 		{F213540D-3E61-4DF1-818D-2668CF962B70}.Debug|Any CPU.Build.0 = Debug|Any CPU
 		{F213540D-3E61-4DF1-818D-2668CF962B70}.Release|Any CPU.ActiveCfg = Release|Any CPU
 		{F213540D-3E61-4DF1-818D-2668CF962B70}.Release|Any CPU.Build.0 = Release|Any CPU
+		{CE6E845D-87AD-49BA-B427-1FDFECF856E7}.Debug|Any CPU.ActiveCfg = Debug|Any CPU
+		{CE6E845D-87AD-49BA-B427-1FDFECF856E7}.Debug|Any CPU.Build.0 = Debug|Any CPU
+		{CE6E845D-87AD-49BA-B427-1FDFECF856E7}.Release|Any CPU.ActiveCfg = Release|Any CPU
+		{CE6E845D-87AD-49BA-B427-1FDFECF856E7}.Release|Any CPU.Build.0 = Release|Any CPU
 	EndGlobalSection
 	GlobalSection(SolutionProperties) = preSolution
 		HideSolutionNode = FALSE

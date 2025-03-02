@@ -18,10 +18,8 @@ RUN apt-get update \
     clang zlib1g-dev
 ARG BUILD_CONFIGURATION=Release
 WORKDIR /src
-COPY ["SmartmonExporter/SmartmonExporter.csproj", "SmartmonExporter/"]
-RUN dotnet restore "./SmartmonExporter/SmartmonExporter.csproj"
 COPY . .
-WORKDIR "/src/SmartmonExporter"
+RUN dotnet restore "./SmartmonExporter.csproj" --no-cache
 RUN dotnet build "./SmartmonExporter.csproj" -c $BUILD_CONFIGURATION -o /app/build
 
 # This stage is used to publish the service project to be copied to the final stage
@@ -44,8 +42,7 @@ FROM ${FINAL_BASE_IMAGE:-mcr.microsoft.com/dotnet/runtime-deps:9.0-bookworm-slim
 # Install smartmontools
 USER root
 RUN apt-get update && apt-get install -y --no-install-recommends smartmontools
-USER app
 
 WORKDIR /app
 COPY --from=publish /app/publish .
-ENTRYPOINT ["./SmartmonExporter"]
+#ENTRYPOINT ["./SmartmonExporter"]
