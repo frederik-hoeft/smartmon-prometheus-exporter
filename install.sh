@@ -20,7 +20,6 @@ work_dir="${build_dir}/SmartmonExporter"
 # remove ENTRYPOINT from Dockerfile
 /usr/bin/sed -i '/ENTRYPOINT/d' "${work_dir}/Dockerfile"
 # add new export stage to Dockerfile:
-echo '\n' >> "${work_dir}/Dockerfile"
 echo 'FROM scratch AS export' >> "${work_dir}/Dockerfile"
 echo 'COPY --from=publish /app/publish /' >> "${work_dir}/Dockerfile"
 
@@ -38,7 +37,7 @@ fi
 
 # install to host
 # binaries go to /usr/local/bin
-/usr/bin/cp "${output_dir}/SmartmonExporter/SmartmonExporter" '/usr/local/bin/smartmon-exporter'
+/usr/bin/cp "${output_dir}/SmartmonExporter" '/usr/local/bin/smartmon-exporter'
 /usr/bin/chmod +x '/usr/local/bin/smartmon-exporter'
 # config goes to /usr/local/etc
 /usr/bin/cp "${script_dir}/config-templates/host.settings.json" '/usr/local/etc/smartmon-exporter.json'
