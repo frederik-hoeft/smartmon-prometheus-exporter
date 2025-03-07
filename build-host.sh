@@ -20,6 +20,11 @@ echo "COPY --from=publish /app/publish /" >> "${work_dir}/Dockerfile"
 
 # build docker image with multi-stage build and export stage to output directory
 /usr/bin/docker build --target export -o "${output_dir}" "${work_dir}"
+# remove debug symbols from output directory (*.pdb, *.dbg)
+/usr/bin/find "${output_dir}" -type f -name "*.pdb" -exec /usr/bin/rm {} \;
+/usr/bin/find "${output_dir}" -type f -name "*.dbg" -exec /usr/bin/rm {} \;
+# copy settings.json from config directory to output directory
+/usr/bin/cp "${script_dir}/conf/settings.json" "${output_dir}/settings.json"
 
 # remove build directory
 /usr/bin/rm -r "${build_dir}"
