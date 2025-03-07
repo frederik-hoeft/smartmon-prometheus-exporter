@@ -1,10 +1,16 @@
 #!/bin/bash
 
-# remove old build directory
+# enable strict mode
+set -euo pipefail
+
 script_dir="$(/usr/bin/realpath "$(/usr/bin/dirname "${BASH_SOURCE[0]}")")"
 build_dir="${script_dir}/build"
 output_dir="${script_dir}/output"
-/usr/bin/rm -r "${build_dir}"
+
+# remove old build directory
+if [ -d "${build_dir}" ]; then
+    /usr/bin/rm -r "${build_dir}"
+fi
 
 # create new build directory
 /usr/bin/mkdir -p "${build_dir}"
