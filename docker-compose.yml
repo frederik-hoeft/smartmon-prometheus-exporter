@@ -3,6 +3,7 @@ services:
     build:
       context: ./SmartmonExporter
     restart: no
+    privileged: true
     volumes:
       - ./conf/settings.json:/app/settings.json:ro
       - ./data:/data
