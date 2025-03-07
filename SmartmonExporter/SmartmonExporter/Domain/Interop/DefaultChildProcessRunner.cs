@@ -36,7 +36,7 @@ internal sealed class DefaultChildProcessRunner : IChildProcessRunner
         return process.ExitCode;
     }
 
-    private class DataReceivedHandler(StringBuilder builder)
+    private sealed class DataReceivedHandler(StringBuilder builder)
     {
         public void OnDataReceived(object sender, DataReceivedEventArgs e)
         {

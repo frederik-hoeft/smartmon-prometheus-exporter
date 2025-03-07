@@ -1,7 +1,7 @@
 ﻿using Jab;
-using SmartmonExporter.Data.Collectors.DeviceCollectors;
 using SmartmonExporter.Domain.Collectors;
 using SmartmonExporter.Domain.Collectors.DeviceCollectors;
+using SmartmonExporter.Domain.Collectors.DeviceCollectors.DeviceAttributeCollectors;
 using SmartmonExporter.Domain.Interop;
 using SmartmonExporter.Domain.Interop.Output;
 
@@ -19,6 +19,8 @@ namespace SmartmonExporter.Domain;
 [Singleton<IDeviceMetricCollector, DeviceInfoCollector>]
 [Singleton<IDeviceMetricCollector, DeviceHealthCollector>]
 [Singleton<IDeviceMetricCollector, DeviceAttributeCollector>]
+[Singleton<IDeviceAttributeCollector, AtaDeviceAttributeCollector>]
+[Singleton<IDeviceAttributeCollector, NvmeDeviceAttributeCollector>]
 public interface ISmartMetricsModule
 {
     internal static SmartctlJsonSerializerContext GetSmartctlJsonSerializerContext() => SmartctlJsonSerializerContext.Default;

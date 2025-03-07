@@ -1,0 +1,3 @@
+﻿namespace SmartmonExporter.Domain.Collectors.DeviceCollectors.DeviceAttributeCollectors;
+
+internal interface IDeviceAttributeCollector : IDeviceMetricCollector;

@@ -37,19 +37,19 @@ internal sealed class SmartctlRunner(IConfiguration configuration, SmartctlJsonS
         string command = configuration.Settings.SmartctlPath;
         Out<string> output = new();
         int exitCode = await processRunner.RunAsync(command, args, output, cancellationToken);
-        if (exitCode != 0)
+        if (exitCode > 255)
         {
-            throw new InvalidOperationException($"smartctl failed with exit code {exitCode} while running '{command} {string.Join(' ', args.Span!)}': {output.Value}");
+            throw new InvalidOperationException($"smartctl failed unexpectedly with exit code {exitCode} while running '{command} {string.Join(' ', args.Span!)}': {output.Value}");
         }
         if (!output.TryGetValue(out string? outputValue))
         {
             throw new InvalidOperationException("smartctl output is empty");
         }
-        TResult? result = JsonSerializer.Deserialize(outputValue, jsonSerializerContext.GetTypeInfo<TResult>()) 
+        TResult result = JsonSerializer.Deserialize(outputValue, jsonSerializerContext.GetTypeInfo<TResult>()) 
             ?? throw new InvalidOperationException("smartctl output deserialization failed");
-        if (result.Smartctl.ExitStatus != 0)
+        if (result.Smartctl.ExitStatus.HasFlag(SmartctlExitStatus.ArgParseError))
         {
-            throw new InvalidOperationException($"smartctl failed with exit status {result.Smartctl.ExitStatus}");
+            throw new InvalidOperationException($"smartctl failed with argument parse error while running '{command} {string.Join(' ', args.Span!)}': {output.Value}");
         }
         ArrayPool<string>.Shared.Return(argsBuffer);
         return result;

@@ -9,7 +9,9 @@ namespace SmartmonExporter.Domain.Interop.Output;
 [JsonSerializable(typeof(SmartctlVersion))]
 [JsonSerializable(typeof(SmartctlDevices))]
 [JsonSerializable(typeof(SmartctlDevice))]
+[JsonSerializable(typeof(SmartctlDeviceInfo))]
 [JsonSerializable(typeof(SmartctlDeviceHealth))]
 [JsonSerializable(typeof(SmartctlSataDeviceInfo))]
 [JsonSerializable(typeof(SmartctlAtaDeviceAttributes))]
+[JsonSerializable(typeof(SmartctlNvmeDeviceAttributes))]
 internal sealed partial class SmartctlJsonSerializerContext : AotJsonSerializerContext;

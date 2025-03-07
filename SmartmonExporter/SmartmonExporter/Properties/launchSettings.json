@@ -2,10 +2,7 @@
   "profiles": {
     "SmartmonExporter": {
       "commandName": "Project",
-      "commandLineArgs": "test"
-    },
-    "Container (Dockerfile)": {
-      "commandName": "Docker"
+      "commandLineArgs": "export"
     }
   }
 }

@@ -10,6 +10,8 @@ public class AppSettings : IRequireValidation
 
     public string? PrometheusNamespace { get; init; }
 
+    public string[]? Devices { get; init; }
+
     public void AssertIsValid() => _ = this is
     {
         OutputPath.Length: > 0,
