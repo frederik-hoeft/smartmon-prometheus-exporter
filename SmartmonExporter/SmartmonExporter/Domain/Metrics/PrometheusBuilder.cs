@@ -1,11 +1,28 @@
 ﻿using System.Text;
+using System.Text.RegularExpressions;
 
 namespace SmartmonExporter.Domain.Metrics;
 
-public class PrometheusBuilder(string prometheusNamespace, int capacity = -1)
+public partial class PrometheusBuilder
 {
-    private readonly StringBuilder _builder = capacity == -1 ? new() : new(capacity);
+    private readonly StringBuilder _builder;
     private readonly Dictionary<string, PrometheusMetric> _metrics = [];
+    private readonly string _prometheusNamespace;
+
+    [GeneratedRegex(@"^[a-zA-Z_][a-zA-Z0-9_]*$")]
+    internal static partial Regex PrometheusNameRegex { get; }
+
+    public PrometheusBuilder(string prometheusNamespace, int capacity = -1)
+    {
+        ArgumentException.ThrowIfNullOrWhiteSpace(prometheusNamespace, nameof(prometheusNamespace));
+        if (!PrometheusNameRegex.IsMatch(prometheusNamespace))
+        {
+            throw new ArgumentException("Invalid prometheus namespace", nameof(prometheusNamespace));
+        }
+
+        _prometheusNamespace = prometheusNamespace;
+        _builder = capacity == -1 ? new() : new(capacity);
+    }
 
     public PrometheusBuilder AddSimpleMetric(string name, bool value, bool includeTimeStamp, params PrometheusLabel[] labels) =>
         AddSimpleMetric(name, value ? "1" : "0", includeTimeStamp, labels);
@@ -24,9 +41,13 @@ public class PrometheusBuilder(string prometheusNamespace, int capacity = -1)
 
     private PrometheusBuilder AddSimpleMetric(string name, string value, bool includeTimeStamp, params PrometheusLabel[] labels)
     {
+        if (!PrometheusNameRegex.IsMatch(name))
+        {
+            throw new ArgumentException("Invalid prometheus metric name", nameof(name));
+        }
         if (!_metrics.TryGetValue(name, out PrometheusMetric? metric))
         {
-            metric = new PrometheusMetric(prometheusNamespace, name);
+            metric = new PrometheusMetric(_prometheusNamespace, name);
             _metrics[name] = metric;
         }
         PrometheusMetricBuilder builder = metric.CreateBuilder(null, includeTimeStamp);
@@ -36,9 +57,13 @@ public class PrometheusBuilder(string prometheusNamespace, int capacity = -1)
 
     public PrometheusBuilder AddMetric(string name, PrometheusMetricTypeDescriptor type, bool includeTimeStamp, Action<PrometheusMetricBuilder> addSamples)
     {
+        if (!PrometheusNameRegex.IsMatch(name))
+        {
+            throw new ArgumentException("Invalid prometheus metric name", nameof(name));
+        }
         if (!_metrics.TryGetValue(name, out PrometheusMetric? metric))
         {
-            metric = new PrometheusMetric(prometheusNamespace, name, type);
+            metric = new PrometheusMetric(_prometheusNamespace, name, type);
             _metrics[name] = metric;
         }
         PrometheusMetricBuilder builder = metric.CreateBuilder(type, includeTimeStamp);
@@ -87,9 +112,11 @@ public class PrometheusMetric(string prometheusNamespace, string name, Prometheu
             {
                 builder.AppendLine();
             }
-            builder.Append("# HELP ").Append(Namespace).Append('_').Append(Name).Append(' ').AppendLine(Type.Value.Description);
+            builder.Append("# HELP ").Append(Namespace).Append('_').Append(Name).Append(' ').AppendLine(Escape(Type.Value.Description));
             builder.Append("# TYPE ").Append(Namespace).Append('_').Append(Name).Append(' ').AppendLine(Type.Value.Type.ToPrometheusString());
         }
         builder.Append(_builder);
     }
+
+    internal static string Escape(string text) => text.Replace("\"", "\\\"");
 }

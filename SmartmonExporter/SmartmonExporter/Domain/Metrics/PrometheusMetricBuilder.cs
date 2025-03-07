@@ -32,7 +32,13 @@ public class PrometheusMetricBuilder(PrometheusMetric metric, bool includeTimeSt
                 {
                     builder.Append(',');
                 }
-                builder.Append(labels[i].Name).Append("=\"").Append(labels[i].Value).Append('"');
+                (string label, string labelValue) = labels[i];
+                if (!PrometheusBuilder.PrometheusNameRegex.IsMatch(label))
+                {
+                    throw new ArgumentException($"Invalid label name '{label}'");
+                }
+                string escapedLabelValue = PrometheusMetric.Escape(labelValue);
+                builder.Append(label).Append("=\"").Append(escapedLabelValue).Append('"');
             }
             builder.Append('}');
         }
