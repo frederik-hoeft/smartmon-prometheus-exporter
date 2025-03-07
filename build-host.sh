@@ -12,10 +12,8 @@ output_dir="${script_dir}/output"
 /usr/bin/cp -r "${script_dir}/SmartmonExporter" "${build_dir}"
 work_dir="${build_dir}/SmartmonExporter"
 # add new export stage to Dockerfile:
-#FROM scratch as export
-#COPY --from=publish /app/publish /
 echo "\n" >> "${work_dir}/Dockerfile"
-echo "FROM scratch as export" >> "${work_dir}/Dockerfile"
+echo "FROM scratch AS export" >> "${work_dir}/Dockerfile"
 echo "COPY --from=publish /app/publish /" >> "${work_dir}/Dockerfile"
 
 # build docker image with multi-stage build and export stage to output directory
