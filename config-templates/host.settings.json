@@ -1,6 +1,6 @@
 ﻿{
   "DebugMode": false,
   "SmartctlPath": "/usr/sbin/smartctl",
-  "OutputPath": "/data/smartctl.prom",
+  "OutputPath": "/usr/local/share/smartmon-exporter/smartctl.prom",
   "PrometheusNamespace": null
 }

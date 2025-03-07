@@ -42,8 +42,7 @@ FROM ${FINAL_BASE_IMAGE:-mcr.microsoft.com/dotnet/runtime-deps:9.0-bookworm-slim
 # Install smartmontools
 USER root
 RUN apt-get update && apt-get install -y --no-install-recommends smartmontools
-#USER app
 
 WORKDIR /app
 COPY --from=publish /app/publish .
-#ENTRYPOINT ["./SmartmonExporter"]
+ENTRYPOINT ["./SmartmonExporter", "export"]

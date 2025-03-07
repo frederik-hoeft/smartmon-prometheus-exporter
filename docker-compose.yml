@@ -2,9 +2,39 @@ services:
   smartctl-exporter:
     build:
       context: ./SmartmonExporter
-    restart: no
+    container_name: smartctl-exporter
+    restart: unless-stopped
     privileged: true
     volumes:
       - ./conf/settings.json:/app/settings.json:ro
       - ./data:/data
-    command: /app/SmartmonExporter export
+    # Run the exporter every 5 minutes, print current time and run the exporter
+    entrypoint: |
+      /bin/bash -c '
+        while true
+        do 
+          echo "Running SmartmonExporter at $(date)"
+          /app/SmartmonExporter export --config /app/settings.json
+          sleep 300
+        done'
+    # healthcheck ensures /data/smartctl.prom was written in the last 10 minutes
+    healthcheck:
+      test: '[ $(date -r /data/smartctl.prom +%s) -gt $(($(date +%s) - 600)) ]'
+      interval: 10m
+      timeout: 10s
+      retries: 3
+      start_period: 10s
+
+  node-exporter:
+    image: prom/node-exporter:v1.7.0
+    container_name: smartctl-node-exporter
+    restart: unless-stopped
+    user: '1000:1000'
+    sysctls:
+      - net.ipv6.conf.all.disable_ipv6=1
+    volumes:
+      - /data:/data:ro
+    command:
+      - '--collector.textfile.directory=/data'
+    expose:
+      - 9100

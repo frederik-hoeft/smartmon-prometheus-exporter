@@ -4,6 +4,7 @@ using SmartmonExporter.Domain.Collectors.DeviceCollectors;
 using SmartmonExporter.Domain.Collectors.DeviceCollectors.DeviceAttributeCollectors;
 using SmartmonExporter.Domain.Interop;
 using SmartmonExporter.Domain.Interop.Output;
+using SmartmonExporter.Domain.Writers;
 
 namespace SmartmonExporter.Domain;
 
@@ -21,6 +22,8 @@ namespace SmartmonExporter.Domain;
 [Singleton<IDeviceMetricCollector, DeviceAttributeCollector>]
 [Singleton<IDeviceAttributeCollector, AtaDeviceAttributeCollector>]
 [Singleton<IDeviceAttributeCollector, NvmeDeviceAttributeCollector>]
+[Singleton<IOutputWriter, FileOutputWriter>]
+[Singleton<IOutputWriter, ConsoleOutputWriter>]
 public interface ISmartMetricsModule
 {
     internal static SmartctlJsonSerializerContext GetSmartctlJsonSerializerContext() => SmartctlJsonSerializerContext.Default;

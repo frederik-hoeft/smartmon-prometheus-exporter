@@ -2,7 +2,7 @@
   "profiles": {
     "SmartmonExporter": {
       "commandName": "Project",
-      "commandLineArgs": "export"
+      "commandLineArgs": "export --write-to-stdout"
     }
   }
 }

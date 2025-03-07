@@ -1,8 +1,5 @@
 ﻿{
   "DebugMode": false,
   "SmartctlPath": "/usr/sbin/smartctl",
-  "OutputPath": "./output.prom",
-  "Devices": [
-    "/dev/sda"
-  ]
+  "OutputPath": "./smart-metrics.prom"
 }
