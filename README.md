@@ -10,7 +10,7 @@ To deploy the Smartmon Prometheus Exporter using Docker, follow these steps:
 
 1. **Clone the repository:**
     ```sh
-    git clone https://github.com/your-repo/smartmon-prometheus-exporter.git
+    git clone https://github.com/frederik-hoeft/smartmon-prometheus-exporter.git
     cd smartmon-prometheus-exporter
     ```
 
@@ -30,7 +30,7 @@ To install and run the Smartmon Prometheus Exporter locally, follow these steps:
 
 1. **Clone the repository:**
     ```sh
-    git clone https://github.com/your-repo/smartmon-prometheus-exporter.git
+    git clone https://github.com/frederik-hoeft/smartmon-prometheus-exporter.git
     cd smartmon-prometheus-exporter
     ```
 
@@ -59,7 +59,7 @@ The final binary will be located at `./bin/smartmon-exporter`.
 To build the Smartmon Prometheus Exporter locally on Windows, you will need to install the latest [.NET 9 SDK](https://dotnet.microsoft.com/en-us/download/dotnet/9.0). Then, run the following commands in PowerShell:
 
 ```powershell
-git clone https://github.com/your-repo/smartmon-prometheus-exporter.git
+git clone https://github.com/frederik-hoeft/smartmon-prometheus-exporter.git
 cd smartmon-prometheus-exporter
 dotnet publish .\SmartmonExporter\SmartmonExporter\SmartmonExporter.csproj --arch x64 --configuration Release --os win --output .\bin\
 ```
