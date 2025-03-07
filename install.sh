@@ -24,7 +24,7 @@ echo 'FROM scratch AS export' >> "${work_dir}/Dockerfile"
 echo 'COPY --from=publish /app/publish /' >> "${work_dir}/Dockerfile"
 
 # build docker image with multi-stage build and export stage to output directory
-/usr/bin/docker build --target export -o "${output_dir}" "${work_dir}"
+/usr/bin/docker build --no-cache --target export -o "${output_dir}" "${work_dir}"
 
 # remove build directory
 /usr/bin/rm -r "${build_dir}"
@@ -52,7 +52,7 @@ SHELL=/bin/sh
 PATH=/usr/local/sbin:/usr/local/bin:/sbin:/bin:/usr/sbin:/usr/bin
 
 # run smartmon-exporter every 5 minutes
-*/5 * * * * root /usr/local/bin/smartmon-exporter --config-path /usr/local/etc/smartmon-exporter.json"
+*/5 * * * * root /usr/local/bin/smartmon-exporter export --config-path /usr/local/etc/smartmon-exporter.json"
 echo "${cron_job_file}" > '/etc/cron.d/smartmon-exporter'
 
 # clean up output directory
@@ -62,4 +62,4 @@ echo "${cron_job_file}" > '/etc/cron.d/smartmon-exporter'
 echo 'Smartmon-Exporter has successfully been installed on your system.'
 echo 'Please edit the configuration file at /usr/local/etc/smartmon-exporter.json to your needs.'
 echo 'By default, the exporter will run every 5 minutes and write metrics to /usr/local/share/smartmon-exporter.'
-echo 'You can start the exporter manually by running /usr/local/bin/smartmon-exporter --config-path /usr/local/etc/smartmon-exporter.json.'
+echo 'You can start the exporter manually by running /usr/local/bin/smartmon-exporter export --config-path /usr/local/etc/smartmon-exporter.json'
