@@ -397,5 +397,6 @@ FodyWeavers.xsd
 *.swp
 *.un~
 
-output/
-conf/
+/output/
+/conf/
+/data/
