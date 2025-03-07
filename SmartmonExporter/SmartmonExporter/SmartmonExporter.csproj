@@ -20,6 +20,11 @@
 	</ItemGroup>
 
 	<ItemGroup>
+		<ProjectReference Include="..\SmartmonExporter.Json.Aot\SmartmonExporter.Json.Aot.csproj" />
+		<ProjectReference Include="..\SmartmonExporter.Json.Aot.Generator\SmartmonExporter.Json.Aot.Generator.csproj" OutputItemType="Analyzer" ReferenceOutputAssembly="false"  />
+	</ItemGroup>
+
+	<ItemGroup>
 	  <None Update="settings.json">
 	    <CopyToOutputDirectory>Always</CopyToOutputDirectory>
 	  </None>

@@ -16,10 +16,13 @@ internal sealed class ConfigurationImpl(AppSettingsJsonSerializerContext jsonSer
         await using Stream? stream = appSettingsProvider.OpenRead(APP_SETTINGS_FILE);
         if (stream is not null)
         {
-            object? settings = await JsonSerializer.DeserializeAsync(stream, typeof(AppSettings), jsonSerializerContext, cancellationToken);
-            _settings = settings as AppSettings;
-            _settings?.AssertIsValid();
-            return _settings is not null;
+            AppSettings? settings = await JsonSerializer.DeserializeAsync(stream, jsonSerializerContext.GetTypeInfo<AppSettings>(), cancellationToken);
+            if (settings is not null)
+            {
+                settings.AssertIsValid();
+                _settings = settings;
+                return true;
+            }
         }
         return false;
     }
