@@ -1,7 +1,7 @@
 services:
   smartctl-exporter:
     build:
-      context: ./SmartmonExporter/SmartmonExporter
+      context: ./SmartmonExporter
     restart: no
     volumes:
       - ./conf/settings.json:/app/settings.json:ro

@@ -19,13 +19,13 @@ RUN apt-get update \
 ARG BUILD_CONFIGURATION=Release
 WORKDIR /src
 COPY . .
-RUN dotnet restore "./SmartmonExporter.csproj" --no-cache
-RUN dotnet build "./SmartmonExporter.csproj" -c $BUILD_CONFIGURATION -o /app/build
+RUN dotnet restore "./SmartmonExporter/SmartmonExporter.csproj" --no-cache
+RUN dotnet build "./SmartmonExporter/SmartmonExporter.csproj" --no-incremental -c $BUILD_CONFIGURATION -o /app/build
 
 # This stage is used to publish the service project to be copied to the final stage
 FROM build AS publish
 ARG BUILD_CONFIGURATION=Release
-RUN dotnet publish "./SmartmonExporter.csproj" -c $BUILD_CONFIGURATION -o /app/publish /p:UseAppHost=true
+RUN dotnet publish "./SmartmonExporter/SmartmonExporter.csproj" -c $BUILD_CONFIGURATION -o /app/publish /p:UseAppHost=true
 
 # This stage is used as the base for the final stage when launching from VS to support debugging in regular mode (Default when not using the Debug configuration)
 FROM base AS aotdebug
