@@ -28,11 +28,11 @@ public sealed record Smartctl
 
 public abstract record RootBase
 {
-    public int[] JsonFormatVersion { get; set; } = null!;
+    public int[] JsonFormatVersion { get; init; } = null!;
 
-    public Smartctl Smartctl { get; set; } = null!;
+    public Smartctl Smartctl { get; init; } = null!;
 
-    public LocalTime LocalTime { get; set; }
+    public LocalTime LocalTime { get; init; }
 }
 
 internal sealed record SmartctlVersion : RootBase;

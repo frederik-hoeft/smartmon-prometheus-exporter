@@ -1,6 +1,9 @@
 ﻿using SmartmonExporter.Configuration;
 using SmartmonExporter.Data;
+using SmartmonExporter.Interop.Output;
+using SmartmonExporter.Interop.Output.Model;
 using System.Diagnostics.CodeAnalysis;
+using System.Text.Json;
 
 namespace SmartmonExporter;
 

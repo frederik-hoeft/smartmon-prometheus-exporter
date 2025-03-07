@@ -1,7 +1,8 @@
 {
   "profiles": {
     "SmartmonExporter": {
-      "commandName": "Project"
+      "commandName": "Project",
+      "commandLineArgs": "test"
     },
     "Container (Dockerfile)": {
       "commandName": "Docker"

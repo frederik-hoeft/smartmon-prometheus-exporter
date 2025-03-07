@@ -1,0 +1,9 @@
+services:
+  smartctl-exporter:
+    build:
+      context: ./SmartmonExporter/SmartmonExporter
+    restart: no
+    volumes:
+      - ./conf/settings.json:/app/settings.json:ro
+      - ./data:/data
+    command: /app/SmartmonExporter export
