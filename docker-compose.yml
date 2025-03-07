@@ -39,5 +39,5 @@ services:
       - /data:/data:ro
     command:
       - '--collector.textfile.directory=/data'
-    expose:
-      - 9100
+    ports:
+      - 0.0.0.0:9100:9100/tcp
