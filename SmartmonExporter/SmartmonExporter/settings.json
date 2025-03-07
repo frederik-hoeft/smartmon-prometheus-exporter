@@ -1,5 +1,8 @@
 ﻿{
   "DebugMode": false,
   "SmartctlPath": "/usr/sbin/smartctl",
-  "OutputPath": "./smart-metrics.prom"
+  "OutputPath": "./smart-metrics.prom",
+  "PrometheusNamespace": null,
+  "WriteToConsole": false,
+  "Devices": null
 }
