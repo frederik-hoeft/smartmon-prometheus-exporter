@@ -1,14 +1,8 @@
 ﻿{
   "DebugMode": false,
-  "SmartctlPath": "E:\\software\\smartmontools\\bin\\smartctl.exe",
-  "OutputPath": "./output",
+  "SmartctlPath": "/usr/sbin/smartctl",
+  "OutputPath": "./output.prom",
   "Devices": [
-    "C:",
-    "D:",
-    "E:",
-    "F:",
-    "G:",
-    "L:",
-    "R:"
+    "/dev/sda"
   ]
 }
