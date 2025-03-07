@@ -29,6 +29,13 @@ internal sealed class FileOutputWriter(IConfiguration configuration) : IOutputWr
 #pragma warning restore IDE0079 // Remove unnecessary suppression
         string tempFilePath = Path.Combine(directory ?? string.Empty, $"{Path.GetFileName(outputPath)}.{Convert.ToHexStringLower(randomBytes)}.temp");
         await File.WriteAllTextAsync(tempFilePath, metrics, cancellationToken);
-        File.Replace(tempFilePath, outputPath, destinationBackupFileName: null);
+        if (File.Exists(outputPath))
+        {
+            File.Replace(tempFilePath, outputPath, destinationBackupFileName: null);
+        }
+        else
+        {
+            File.Move(tempFilePath, outputPath);
+        }
     }
 }
