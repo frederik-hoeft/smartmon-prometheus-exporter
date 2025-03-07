@@ -53,7 +53,7 @@ SHELL=/bin/sh
 PATH=/usr/local/sbin:/usr/local/bin:/sbin:/bin:/usr/sbin:/usr/bin
 
 # run smartmon-exporter every 5 minutes
-*/5 * * * * root /usr/local/bin/smartmon-exporter --config /usr/local/etc/smartmon-exporter.json"
+*/5 * * * * root /usr/local/bin/smartmon-exporter --config-path /usr/local/etc/smartmon-exporter.json"
 echo "${cron_job_file}" > '/etc/cron.d/smartmon-exporter'
 
 # clean up output directory
@@ -63,4 +63,4 @@ echo "${cron_job_file}" > '/etc/cron.d/smartmon-exporter'
 echo 'Smartmon-Exporter has successfully been installed on your system.'
 echo 'Please edit the configuration file at /usr/local/etc/smartmon-exporter.json to your needs.'
 echo 'By default, the exporter will run every 5 minutes and write metrics to /usr/local/share/smartmon-exporter.'
-echo 'You can start the exporter manually by running /usr/local/bin/smartmon-exporter --config /usr/local/etc/smartmon-exporter.json.'
+echo 'You can start the exporter manually by running /usr/local/bin/smartmon-exporter --config-path /usr/local/etc/smartmon-exporter.json.'

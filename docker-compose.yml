@@ -14,7 +14,10 @@ services:
         while true
         do 
           echo "Running SmartmonExporter at $(date)"
-          /app/SmartmonExporter export --config /app/settings.json
+          /app/SmartmonExporter export --config-path /app/settings.json || {
+            echo "SmartmonExporter failed at $(date)"
+            exit 1
+          }
           sleep 300
         done'
     # healthcheck ensures /data/smartctl.prom was written in the last 10 minutes
