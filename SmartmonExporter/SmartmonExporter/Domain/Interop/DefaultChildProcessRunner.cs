@@ -1,20 +1,26 @@
-﻿using System.Diagnostics;
+﻿using SmartmonExporter.Configuration;
+using System.Diagnostics;
 using System.Text;
 
 namespace SmartmonExporter.Domain.Interop;
 
-internal sealed class DefaultChildProcessRunner : IChildProcessRunner
+internal sealed class DefaultChildProcessRunner(IConfiguration configuration) : IChildProcessRunner
 {
     public async Task<int> RunAsync(string command, ReadOnlyMemory<string> arguments, Out<string> output, CancellationToken cancellationToken)
     {
         ArgumentException.ThrowIfNullOrWhiteSpace(command, nameof(command));
 
+        string args = string.Join(' ', arguments.Span!);
+        if (configuration.Settings.DebugMode)
+        {
+            Console.WriteLine($"execute: '{command} {args}'");
+        }
         using Process process = new()
         {
             StartInfo = new ProcessStartInfo
             {
                 FileName = command,
-                Arguments = string.Join(' ', arguments.Span!),
+                Arguments = args,
                 RedirectStandardOutput = true,
                 RedirectStandardError = true,
                 UseShellExecute = false,
@@ -33,6 +39,10 @@ internal sealed class DefaultChildProcessRunner : IChildProcessRunner
         process.OutputDataReceived -= stdoutHandler.OnDataReceived;
         process.ErrorDataReceived -= stderrHandler.OnDataReceived;
         output.SetValue(outputBuilder.ToString());
+        if (configuration.Settings.DebugMode)
+        {
+            Console.WriteLine(output.Value);
+        }
         return process.ExitCode;
     }
 

@@ -10,7 +10,7 @@ internal sealed partial class AtaDeviceAttributeCollector(ISmartctlRunner smartc
 {
     public int Priority => 0;
 
-    [GeneratedRegex(@"ata")]
+    [GeneratedRegex(@"(ata|sat)")]
     private partial Regex DeviceTypeRegex { get; }
 
     [GeneratedRegex(@"(?<num>^[0-9]+)")]
