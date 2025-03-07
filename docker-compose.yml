@@ -36,8 +36,11 @@ services:
     sysctls:
       - net.ipv6.conf.all.disable_ipv6=1
     volumes:
-      - /data:/data:ro
+      - ./data:/data:ro
     command:
       - '--collector.textfile.directory=/data'
     ports:
       - 0.0.0.0:9100:9100/tcp
+    depends_on:
+      smartctl-exporter:
+        condition: service_healthy

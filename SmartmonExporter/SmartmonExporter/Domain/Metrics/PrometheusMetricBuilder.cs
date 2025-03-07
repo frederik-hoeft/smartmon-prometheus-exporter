@@ -2,24 +2,8 @@
 
 namespace SmartmonExporter.Domain.Metrics;
 
-public class PrometheusMetricBuilder(string metricNamespace, string metricName, PrometheusMetricTypeDescriptor metricType, StringBuilder builder, bool includeTimeStamp, bool includeHeader)
+public class PrometheusMetricBuilder(PrometheusMetric metric, bool includeTimeStamp)
 {
-    private bool _wroteHeader;
-
-    private void WriteHeader()
-    {
-        if (includeHeader && !_wroteHeader)
-        {
-            if (builder.Length > 0)
-            {
-                builder.AppendLine();
-            }
-            builder.Append("# HELP ").Append(metricNamespace).Append('_').Append(metricName).Append(' ').AppendLine(metricType.Description);
-            builder.Append("# TYPE ").Append(metricNamespace).Append('_').Append(metricName).Append(' ').AppendLine(metricType.Type.ToPrometheusString());
-            _wroteHeader = true;
-        }
-    }
-
     public PrometheusMetricBuilder AddSample(bool value, params ReadOnlySpan<PrometheusLabel> labels) =>
         AddSample(value ? "1" : "0", labels);
 
@@ -37,8 +21,8 @@ public class PrometheusMetricBuilder(string metricNamespace, string metricName, 
 
     internal PrometheusMetricBuilder AddSample(string value, params ReadOnlySpan<PrometheusLabel> labels)
     {
-        WriteHeader();
-        builder.Append(metricNamespace).Append('_').Append(metricName);
+        StringBuilder builder = metric._builder;
+        builder.Append(metric.Namespace).Append('_').Append(metric.Name);
         if (labels.Length > 0)
         {
             builder.Append('{');
