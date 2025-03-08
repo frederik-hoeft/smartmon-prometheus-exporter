@@ -397,5 +397,5 @@ FodyWeavers.xsd
 *.swp
 *.un~
 
-/conf/
+conf/settings.json
 /data/
