@@ -28,8 +28,8 @@ internal sealed class DeviceHealthCollector(ISmartctlRunner smartctlRunner) : ID
         prometheus.AddMetric("smart_status_summary", Prometheus.Gauge("SMART status summary"), includeTimeStamp: false, samples =>
         {
             DiskHealth health = DiskHealth.Ok;
-            // + 1 for the overall health status + 2 for the disk and type labels
-            int length = StatusFlags.Length + 1 + 2;
+            // + 1 for the overall health status + 2 for the disk and type labels + 1 for optional serial_number
+            int length = StatusFlags.Length + 1 + 2 + 1;
             PrometheusLabel[] buffer = ArrayPool<PrometheusLabel>.Shared.Rent(length);
             Span<PrometheusLabel> labels = buffer.AsSpan(0, length);
             int i = 0;
@@ -58,12 +58,33 @@ internal sealed class DeviceHealthCollector(ISmartctlRunner smartctlRunner) : ID
             }
             labels[i++] = Prometheus.Label("health", GetHealthStatus(health));
             labels[i++] = Prometheus.Label("disk", device.Name);
-            labels[i] = Prometheus.Label("type", device.Type);
-            samples.AddSample(value: health is DiskHealth.Ok or DiskHealth.Degraded, labels);
+            labels[i++] = Prometheus.Label("type", device.Type);
+            
+            // Use actual length based on whether serial number is present
+            int actualLength = i;
+            if (!string.IsNullOrWhiteSpace(device.SerialNumber))
+            {
+                labels[i++] = Prometheus.Label("serial_number", device.SerialNumber);
+                actualLength = i;
+            }
+            
+            samples.AddSample(value: health is DiskHealth.Ok or DiskHealth.Degraded, labels[..actualLength]);
             ArrayPool<PrometheusLabel>.Shared.Return(buffer);
         });
+
+        List<PrometheusLabel> statusLabels = 
+        [
+            Prometheus.Label("disk", device.Name),
+            Prometheus.Label("type", device.Type)
+        ];
+
+        if (!string.IsNullOrWhiteSpace(device.SerialNumber))
+        {
+            statusLabels.Add(Prometheus.Label("serial_number", device.SerialNumber));
+        }
+
         prometheus.AddMetric("smart_status_passed", Prometheus.Gauge("SMART status passed"), includeTimeStamp: false, samples => samples
-            .AddSample(value: deviceHealth.SmartStatus?.Passed is true, Prometheus.Label("disk", device.Name), Prometheus.Label("type", device.Type)));
+            .AddSample(value: deviceHealth.SmartStatus?.Passed is true, [.. statusLabels]));
         return deviceHealth.SmartStatus is not null;
     }
 

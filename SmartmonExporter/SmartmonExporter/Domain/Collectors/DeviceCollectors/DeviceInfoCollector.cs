@@ -23,7 +23,8 @@ internal sealed class DeviceInfoCollector(ISmartctlRunner smartctlRunner) : IDev
         labels.AddIfNotNull("model_family", deviceInfo.ModelFamily);
         labels.AddIfNotNull("model_name", deviceInfo.ModelName);
         labels.AddIfNotNull("device_model", deviceInfo.DeviceModel);
-        labels.AddIfNotNull("serial_number", deviceInfo.SerialNumber);
+        // Use serial number from device if available, otherwise from deviceInfo
+        labels.AddIfNotNull("serial_number", device.SerialNumber ?? deviceInfo.SerialNumber);
         labels.AddIfNotNull("firmware_version", deviceInfo.FirmwareVersion);
         labels.AddIfNotNull("vendor", deviceInfo.Vendor);
         labels.AddIfNotNull("product", deviceInfo.Product);
@@ -32,10 +33,16 @@ internal sealed class DeviceInfoCollector(ISmartctlRunner smartctlRunner) : IDev
 
         prometheus.AddMetric("device_info", Prometheus.Gauge("Device information"), includeTimeStamp: false, samples => samples.AddSample(value: true, [.. labels]));
 
+        List<PrometheusLabel> supportLabels = [disk, type];
+        if (!string.IsNullOrWhiteSpace(device.SerialNumber))
+        {
+            supportLabels.Add(Prometheus.Label("serial_number", device.SerialNumber));
+        }
+
         prometheus.AddMetric("smart_support_available", Prometheus.Gauge("SMART support available"), includeTimeStamp: false, samples => samples
-            .AddSample(value: deviceInfo.SmartSupport.Available, disk, type));
+            .AddSample(value: deviceInfo.SmartSupport.Available, [.. supportLabels]));
         prometheus.AddMetric("smart_support_enabled", Prometheus.Gauge("SMART support enabled"), includeTimeStamp: false, samples => samples
-            .AddSample(value: deviceInfo.SmartSupport.Enabled, disk, type));
+            .AddSample(value: deviceInfo.SmartSupport.Enabled, [.. supportLabels]));
 
         return true; // Continue with the next collector
     }
