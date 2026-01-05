@@ -2,7 +2,7 @@
 
 namespace SmartmonExporter.Domain.Metrics;
 
-public class PrometheusMetricBuilder(PrometheusMetric metric, bool includeTimeStamp)
+internal sealed class PrometheusMetricBuilder(PrometheusMetric metric, bool includeTimeStamp)
 {
     public PrometheusMetricBuilder AddSample(bool value, params ReadOnlySpan<PrometheusLabel?> labels) =>
         AddSample(value ? "1" : "0", labels);

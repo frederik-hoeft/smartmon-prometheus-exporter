@@ -5,7 +5,7 @@ using System.Diagnostics.CodeAnalysis;
 
 namespace SmartmonExporter;
 
-public class Commands
+internal sealed class Commands
 {
     private static async ValueTask<DefaultServiceProvider> GetServiceProviderAsync(string configPath, CancellationToken cancellationToken)
     {

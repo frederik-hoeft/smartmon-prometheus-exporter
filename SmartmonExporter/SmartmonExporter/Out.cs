@@ -2,7 +2,7 @@
 
 namespace SmartmonExporter;
 
-public class Out<T>
+internal sealed class Out<T>
 {
     public T? Value { get; private set; }
 

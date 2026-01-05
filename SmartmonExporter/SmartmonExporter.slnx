@@ -1,0 +1,9 @@
+﻿<Solution>
+  <Folder Name="/Solution Items/">
+    <File Path=".editorconfig" />
+    <File Path="Directory.Build.props" />
+  </Folder>
+  <Project Path="SmartmonExporter/SmartmonExporter.csproj" Id="f213540d-3e61-4df1-818d-2668cf962b70" />
+  <Project Path="SmartmonExporter.Json.Aot/SmartmonExporter.Json.Aot.csproj" Id="08b44d8e-d05d-6b87-d1ac-1e6ad04b3ba3" />
+  <Project Path="SmartmonExporter.Json.Aot.Generator/SmartmonExporter.Json.Aot.Generator.csproj" Id="ca1c4fbb-c0c0-8672-9f08-af9817e9a112" />
+</Solution>

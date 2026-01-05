@@ -1,6 +1,6 @@
 ﻿namespace SmartmonExporter.Domain.Metrics;
 
-public enum PrometheusMetricType
+internal enum PrometheusMetricType
 {
     Untyped,
     Counter,

@@ -1,6 +1,6 @@
 ﻿namespace SmartmonExporter.Configuration.Model;
 
-public class AppSettings : IRequireValidation
+internal sealed class AppSettings : IRequireValidation
 {
     public bool DebugMode { get; set; }
 

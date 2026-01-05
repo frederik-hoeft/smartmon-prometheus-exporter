@@ -1,6 +1,6 @@
 ﻿namespace SmartmonExporter.Domain;
 
-public interface IMetricsExporter
+internal interface IMetricsExporter
 {
     Task<string> ExportAsync(string prometheusNamespace, CancellationToken cancellationToken);
 }

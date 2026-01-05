@@ -5,7 +5,6 @@ using SmartmonExporter.Domain.Interop.Output.Model;
 using SmartmonExporter.Domain.Metrics;
 using SmartmonExporter.Pipelines;
 using System.Collections.Immutable;
-using System.Data.SqlTypes;
 
 namespace SmartmonExporter.Domain.Collectors;
 

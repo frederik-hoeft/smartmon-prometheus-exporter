@@ -3,14 +3,14 @@ using System.Text.Json.Serialization;
 
 namespace SmartmonExporter.Domain.Interop.Output.Model;
 
-public sealed record Smartctl
+internal sealed record Smartctl
 (
     [property: JsonPropertyName("version")] int[] VersionRaw,
     string SvnRevision,
     string PlatformInfo,
     string BuildInfo,
     string[] Argv,
-    SmartctlExitStatus ExitStatus,
+    SmartctlErrorCode ExitStatus,
     [property: JsonConverter(typeof(DriveDatabaseVersionConverter))] string? DriveDatabaseVersion
 )
 {
@@ -26,9 +26,9 @@ public sealed record Smartctl
 }
 
 [Flags]
-public enum SmartctlExitStatus : int
+internal enum SmartctlErrorCode : int
 {
-    Ok =                    0x0,
+    None =                  0x0,
     ArgParseError =         0x1,
     OpenDeviceFailed =      0x2,
     CommandExecutionError = 0x4,

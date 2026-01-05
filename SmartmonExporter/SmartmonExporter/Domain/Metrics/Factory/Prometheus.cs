@@ -1,9 +1,8 @@
-﻿using System.Diagnostics.CodeAnalysis;
-using System.Numerics;
+﻿using System.Numerics;
 
 namespace SmartmonExporter.Domain.Metrics.Factory;
 
-public static class Prometheus
+internal static class Prometheus
 {
     public static PrometheusLabel Label(string name, string value) => new(name, value);
 

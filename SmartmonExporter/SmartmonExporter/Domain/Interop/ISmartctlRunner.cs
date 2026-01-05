@@ -2,7 +2,7 @@
 
 namespace SmartmonExporter.Domain.Interop;
 
-public interface ISmartctlRunner
+internal interface ISmartctlRunner
 {
     Task<TResult> RunAsync<TResult>(string[] arguments, string? device, CancellationToken cancellationToken) where TResult : RootBase;
 }

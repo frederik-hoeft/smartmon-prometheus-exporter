@@ -1,6 +1,6 @@
 ﻿namespace SmartmonExporter.Configuration.Providers;
 
-public interface IResourceProvider
+internal interface IResourceProvider
 {
     IResourceProviderStrategy? PreferredStrategy { get; set; }
 

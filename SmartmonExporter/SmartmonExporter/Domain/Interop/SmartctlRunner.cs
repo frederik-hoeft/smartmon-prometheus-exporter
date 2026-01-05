@@ -47,7 +47,7 @@ internal sealed class SmartctlRunner(IConfiguration configuration, SmartctlJsonS
         }
         TResult result = JsonSerializer.Deserialize(outputValue, jsonSerializerContext.GetTypeInfo<TResult>()) 
             ?? throw new InvalidOperationException("smartctl output deserialization failed");
-        if (result.Smartctl.ExitStatus.HasFlag(SmartctlExitStatus.ArgParseError))
+        if (result.Smartctl.ExitStatus.HasFlag(SmartctlErrorCode.ArgParseError))
         {
             throw new InvalidOperationException($"smartctl failed with argument parse error while running '{command} {string.Join(' ', args.Span!)}': {output.Value}");
         }

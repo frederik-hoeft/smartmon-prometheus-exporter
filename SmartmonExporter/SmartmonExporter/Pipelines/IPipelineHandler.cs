@@ -1,6 +1,6 @@
 ﻿namespace SmartmonExporter.Pipelines;
 
-public interface IPipelineHandler
+internal interface IPipelineHandler
 {
     int Priority { get; }
 }

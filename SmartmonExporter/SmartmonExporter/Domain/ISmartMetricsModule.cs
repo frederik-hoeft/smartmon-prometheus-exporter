@@ -24,7 +24,7 @@ namespace SmartmonExporter.Domain;
 [Singleton<IDeviceAttributeCollector, NvmeDeviceAttributeCollector>]
 [Singleton<IOutputWriter, FileOutputWriter>]
 [Singleton<IOutputWriter, ConsoleOutputWriter>]
-public interface ISmartMetricsModule
+internal interface ISmartMetricsModule
 {
     internal static SmartctlJsonSerializerContext GetSmartctlJsonSerializerContext() => SmartctlJsonSerializerContext.Default;
 }
