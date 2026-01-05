@@ -6,7 +6,8 @@ namespace SmartmonExporter.Domain.Collectors.DeviceCollectors;
 
 internal sealed class TimestampCollector : IDeviceMetricCollector
 {
-    // Run after DeviceInfoCollector which has int.MinValue
+    // Run after DeviceInfoCollector to ensure serial number is initialized
+    // DeviceInfoCollector has Priority = int.MinValue
     public int Priority => int.MinValue + 1;
 
     public ValueTask<bool> TryCollectAsync(Device device, PrometheusBuilder prometheus, CancellationToken cancellationToken)

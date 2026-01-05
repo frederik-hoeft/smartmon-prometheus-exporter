@@ -8,6 +8,7 @@ namespace SmartmonExporter.Domain.Collectors.DeviceCollectors;
 internal sealed class DeviceInfoCollector(ISmartctlRunner smartctlRunner) : IDeviceMetricCollector
 {
     // Run first in the pipeline to initialize serial number for other collectors
+    // Collectors run sequentially (not concurrently), so mutation is safe
     public int Priority => int.MinValue;
 
     public async ValueTask<bool> TryCollectAsync(Device device, PrometheusBuilder prometheus, CancellationToken cancellationToken)
