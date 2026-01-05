@@ -10,7 +10,7 @@ services:
       - ./data:/data
     # Run the exporter every 5 minutes, print current time and run the exporter
     entrypoint: |
-      /bin/bash -c '
+      /bin/sh -c '
         while true
         do 
           echo "Running SmartmonExporter at $(date)"
