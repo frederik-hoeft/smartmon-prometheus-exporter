@@ -40,7 +40,8 @@ public class PrometheusMetricBuilder(PrometheusMetric metric, bool includeTimeSt
             bool first = true;
             for (int i = 0; i < labels.Length; i++)
             {
-                if (!labels[i].HasValue)
+                PrometheusLabel? nullableLabel = labels[i];
+                if (!nullableLabel.HasValue)
                 {
                     continue;
                 }
@@ -51,7 +52,7 @@ public class PrometheusMetricBuilder(PrometheusMetric metric, bool includeTimeSt
                 }
                 first = false;
                 
-                PrometheusLabel label = labels[i]!.Value;
+                PrometheusLabel label = nullableLabel.Value;
                 if (!PrometheusBuilder.PrometheusNameRegex.IsMatch(label.Name))
                 {
                     throw new ArgumentException($"Invalid label name '{label.Name}'");

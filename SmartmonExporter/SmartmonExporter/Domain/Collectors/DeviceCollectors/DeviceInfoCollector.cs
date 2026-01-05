@@ -23,27 +23,27 @@ internal sealed class DeviceInfoCollector(ISmartctlRunner smartctlRunner) : IDev
         
         PrometheusLabel disk = Prometheus.Label("disk", device.Name);
         PrometheusLabel type = Prometheus.Label("type", device.Type);
-        List<PrometheusLabel> labels =
-        [
-            disk,
-            type,
-        ];
-
-        labels.AddIfNotNull("model_family", deviceInfo.ModelFamily);
-        labels.AddIfNotNull("model_name", deviceInfo.ModelName);
-        labels.AddIfNotNull("device_model", deviceInfo.DeviceModel);
-        labels.AddIfNotNull("serial_number", device.SerialNumber);
-        labels.AddIfNotNull("firmware_version", deviceInfo.FirmwareVersion);
-        labels.AddIfNotNull("vendor", deviceInfo.Vendor);
-        labels.AddIfNotNull("product", deviceInfo.Product);
-        labels.AddIfNotNull("revision", deviceInfo.Revision);
-        labels.AddIfNotNull("lun_id", deviceInfo.LunId);
-
-        prometheus.AddMetric("device_info", Prometheus.Gauge("Device information"), includeTimeStamp: false, samples => samples.AddSample(value: true, [.. labels]));
-
+        PrometheusLabel? modelFamily = !string.IsNullOrWhiteSpace(deviceInfo.ModelFamily) 
+            ? Prometheus.Label("model_family", deviceInfo.ModelFamily) : null;
+        PrometheusLabel? modelName = !string.IsNullOrWhiteSpace(deviceInfo.ModelName) 
+            ? Prometheus.Label("model_name", deviceInfo.ModelName) : null;
+        PrometheusLabel? deviceModel = !string.IsNullOrWhiteSpace(deviceInfo.DeviceModel) 
+            ? Prometheus.Label("device_model", deviceInfo.DeviceModel) : null;
         PrometheusLabel? serialLabel = !string.IsNullOrWhiteSpace(device.SerialNumber) 
-            ? Prometheus.Label("serial_number", device.SerialNumber) 
-            : null;
+            ? Prometheus.Label("serial_number", device.SerialNumber) : null;
+        PrometheusLabel? firmwareVersion = !string.IsNullOrWhiteSpace(deviceInfo.FirmwareVersion) 
+            ? Prometheus.Label("firmware_version", deviceInfo.FirmwareVersion) : null;
+        PrometheusLabel? vendor = !string.IsNullOrWhiteSpace(deviceInfo.Vendor) 
+            ? Prometheus.Label("vendor", deviceInfo.Vendor) : null;
+        PrometheusLabel? product = !string.IsNullOrWhiteSpace(deviceInfo.Product) 
+            ? Prometheus.Label("product", deviceInfo.Product) : null;
+        PrometheusLabel? revision = !string.IsNullOrWhiteSpace(deviceInfo.Revision) 
+            ? Prometheus.Label("revision", deviceInfo.Revision) : null;
+        PrometheusLabel? lunId = !string.IsNullOrWhiteSpace(deviceInfo.LunId) 
+            ? Prometheus.Label("lun_id", deviceInfo.LunId) : null;
+
+        prometheus.AddMetric("device_info", Prometheus.Gauge("Device information"), includeTimeStamp: false, samples => samples
+            .AddSample(value: true, disk, type, modelFamily, modelName, deviceModel, serialLabel, firmwareVersion, vendor, product, revision, lunId));
 
         prometheus.AddMetric("smart_support_available", Prometheus.Gauge("SMART support available"), includeTimeStamp: false, samples => samples
             .AddSample(value: deviceInfo.SmartSupport?.Available ?? false, disk, type, serialLabel));
@@ -51,16 +51,5 @@ internal sealed class DeviceInfoCollector(ISmartctlRunner smartctlRunner) : IDev
             .AddSample(value: deviceInfo.SmartSupport?.Enabled ?? false, disk, type, serialLabel));
 
         return true; // Continue with the next collector
-    }
-}
-
-file static class ListExtensions
-{
-    public static void AddIfNotNull(this List<PrometheusLabel> labels, string name, string? value)
-    {
-        if (!string.IsNullOrWhiteSpace(value))
-        {
-            labels.Add(Prometheus.Label(name, value));
-        }
     }
 }
