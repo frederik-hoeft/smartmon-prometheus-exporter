@@ -39,10 +39,13 @@ internal sealed class DeviceInfoCollector(ISmartctlRunner smartctlRunner) : IDev
             supportLabels.Add(Prometheus.Label("serial_number", device.SerialNumber));
         }
 
-        prometheus.AddMetric("smart_support_available", Prometheus.Gauge("SMART support available"), includeTimeStamp: false, samples => samples
-            .AddSample(value: deviceInfo.SmartSupport.Available, [.. supportLabels]));
-        prometheus.AddMetric("smart_support_enabled", Prometheus.Gauge("SMART support enabled"), includeTimeStamp: false, samples => samples
-            .AddSample(value: deviceInfo.SmartSupport.Enabled, [.. supportLabels]));
+        if (deviceInfo.SmartSupport is not null)
+        {
+            prometheus.AddMetric("smart_support_available", Prometheus.Gauge("SMART support available"), includeTimeStamp: false, samples => samples
+                .AddSample(value: deviceInfo.SmartSupport.Available, [.. supportLabels]));
+            prometheus.AddMetric("smart_support_enabled", Prometheus.Gauge("SMART support enabled"), includeTimeStamp: false, samples => samples
+                .AddSample(value: deviceInfo.SmartSupport.Enabled, [.. supportLabels]));
+        }
 
         return true; // Continue with the next collector
     }
