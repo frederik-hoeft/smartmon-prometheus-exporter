@@ -28,10 +28,10 @@ internal sealed class DeviceHealthCollector(ISmartctlRunner smartctlRunner) : ID
         prometheus.AddMetric("smart_status_summary", Prometheus.Gauge("SMART status summary"), includeTimeStamp: false, samples =>
         {
             DiskHealth health = DiskHealth.Ok;
-            // + 1 for the overall health status + 2 for the disk and type labels + 1 for optional serial_number
-            int length = StatusFlags.Length + 1 + 2 + 1;
-            PrometheusLabel[] buffer = ArrayPool<PrometheusLabel>.Shared.Rent(length);
-            Span<PrometheusLabel> labels = buffer.AsSpan(0, length);
+            // Maximum size: StatusFlags + 1 for health + 2 for disk/type + 1 for optional serial_number
+            int maxLength = StatusFlags.Length + 1 + 2 + 1;
+            PrometheusLabel[] buffer = ArrayPool<PrometheusLabel>.Shared.Rent(maxLength);
+            Span<PrometheusLabel> labels = buffer.AsSpan();
             int i = 0;
             for (; i < StatusFlags.Length; ++i)
             {
