@@ -1,6 +1,6 @@
 ﻿namespace SmartmonExporter.Domain.Interop.Output.Model;
 
-public abstract record RootBase
+internal abstract record RootBase
 {
     public int[] JsonFormatVersion { get; init; } = null!;
 

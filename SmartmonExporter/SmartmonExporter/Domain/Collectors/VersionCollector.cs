@@ -1,5 +1,4 @@
-﻿using SmartmonExporter.Domain;
-using SmartmonExporter.Domain.Interop;
+﻿using SmartmonExporter.Domain.Interop;
 using SmartmonExporter.Domain.Interop.Output.Model;
 using SmartmonExporter.Domain.Metrics;
 using SmartmonExporter.Domain.Metrics.Factory;

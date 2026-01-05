@@ -8,7 +8,7 @@ namespace SmartmonExporter.Configuration;
 [Singleton<IConfiguration, ConfigurationImpl>]
 [Singleton<IResourceProvider, ResourceProvider>]
 [Singleton<IResourceProviderStrategy, FileSystemResourceProviderStrategy>]
-public interface IConfigurationModule
+internal interface IConfigurationModule
 {
     internal static AppSettingsJsonSerializerContext GetAppSettingsJsonSerializerContext() => AppSettingsJsonSerializerContext.Default;
 }

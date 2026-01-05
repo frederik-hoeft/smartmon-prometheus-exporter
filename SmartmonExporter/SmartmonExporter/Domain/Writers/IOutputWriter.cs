@@ -2,7 +2,7 @@
 
 namespace SmartmonExporter.Domain.Writers;
 
-public interface IOutputWriter : IPipelineHandler
+internal interface IOutputWriter : IPipelineHandler
 {
     ValueTask WriteAsync(string metrics, CancellationToken cancellationToken);
 }

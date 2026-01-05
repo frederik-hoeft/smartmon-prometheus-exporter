@@ -1,6 +1,6 @@
 ﻿namespace SmartmonExporter.Configuration.Model;
 
-public interface IRequireValidation
+internal interface IRequireValidation
 {
     void AssertIsValid();
 }

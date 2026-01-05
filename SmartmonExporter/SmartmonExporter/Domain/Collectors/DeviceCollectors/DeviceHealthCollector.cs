@@ -11,15 +11,15 @@ internal sealed class DeviceHealthCollector(ISmartctlRunner smartctlRunner) : ID
 {
     public int Priority => 20;
 
-    private static ImmutableArray<(SmartctlExitStatus Status, string Name)> StatusFlags =>
+    private static ImmutableArray<(SmartctlErrorCode Status, string Name)> StatusFlags =>
     [
-        (SmartctlExitStatus.CommandExecutionError, "command_execution_error"),
-        (SmartctlExitStatus.DiskFailing, "disk_failing"),
-        (SmartctlExitStatus.DiskPreFail, "disk_prefail"),
-        (SmartctlExitStatus.DiskPreFailInPast, "disk_prefail_in_past"),
-        (SmartctlExitStatus.LogContainsErrors, "log_contains_errors"),
-        (SmartctlExitStatus.OpenDeviceFailed, "open_device_failed"),
-        (SmartctlExitStatus.SelfTestErrors, "self_test_errors"),
+        (SmartctlErrorCode.CommandExecutionError, "command_execution_error"),
+        (SmartctlErrorCode.DiskFailing, "disk_failing"),
+        (SmartctlErrorCode.DiskPreFail, "disk_prefail"),
+        (SmartctlErrorCode.DiskPreFailInPast, "disk_prefail_in_past"),
+        (SmartctlErrorCode.LogContainsErrors, "log_contains_errors"),
+        (SmartctlErrorCode.OpenDeviceFailed, "open_device_failed"),
+        (SmartctlErrorCode.SelfTestErrors, "self_test_errors"),
     ];
 
     public async ValueTask<bool> TryCollectAsync(Device device, PrometheusBuilder prometheus, CancellationToken cancellationToken)
@@ -38,19 +38,19 @@ internal sealed class DeviceHealthCollector(ISmartctlRunner smartctlRunner) : ID
             int i = 0;
             for (; i < StatusFlags.Length; ++i)
             {
-                (SmartctlExitStatus status, string name) = StatusFlags[i];
+                (SmartctlErrorCode status, string name) = StatusFlags[i];
                 if (deviceHealth.Smartctl.ExitStatus.HasFlag(status))
                 {
                     labels[i] = Prometheus.Label(name, "yes");
                     health |= status switch
                     {
-                        SmartctlExitStatus.CommandExecutionError => DiskHealth.Failed,
-                        SmartctlExitStatus.DiskFailing => DiskHealth.Failing,
-                        SmartctlExitStatus.DiskPreFail => DiskHealth.PreFail,
-                        SmartctlExitStatus.DiskPreFailInPast => DiskHealth.Degraded,
-                        SmartctlExitStatus.LogContainsErrors => DiskHealth.Degraded,
-                        SmartctlExitStatus.OpenDeviceFailed => DiskHealth.Failed,
-                        SmartctlExitStatus.SelfTestErrors => DiskHealth.Degraded,
+                        SmartctlErrorCode.CommandExecutionError => DiskHealth.Failed,
+                        SmartctlErrorCode.DiskFailing => DiskHealth.Failing,
+                        SmartctlErrorCode.DiskPreFail => DiskHealth.PreFail,
+                        SmartctlErrorCode.DiskPreFailInPast => DiskHealth.Degraded,
+                        SmartctlErrorCode.LogContainsErrors => DiskHealth.Degraded,
+                        SmartctlErrorCode.OpenDeviceFailed => DiskHealth.Failed,
+                        SmartctlErrorCode.SelfTestErrors => DiskHealth.Degraded,
                         _ => DiskHealth.Ok
                     };
                 }

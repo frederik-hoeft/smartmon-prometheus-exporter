@@ -2,7 +2,7 @@
 
 namespace SmartmonExporter.Configuration.Providers;
 
-public interface IResourceProviderStrategy : IPipelineHandler
+internal interface IResourceProviderStrategy : IPipelineHandler
 {
     Stream? OpenRead(string resourceName);
 }
