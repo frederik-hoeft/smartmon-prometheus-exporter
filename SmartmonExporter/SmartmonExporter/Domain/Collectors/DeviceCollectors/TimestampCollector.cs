@@ -6,7 +6,8 @@ namespace SmartmonExporter.Domain.Collectors.DeviceCollectors;
 
 internal sealed class TimestampCollector : IDeviceMetricCollector
 {
-    public int Priority => int.MinValue; // Ensure this runs first in the pipeline
+    // Run after DeviceInfoCollector which has int.MinValue
+    public int Priority => int.MinValue + 1;
 
     public ValueTask<bool> TryCollectAsync(Device device, PrometheusBuilder prometheus, CancellationToken cancellationToken)
     {

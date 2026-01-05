@@ -7,13 +7,18 @@ namespace SmartmonExporter.Domain.Collectors.DeviceCollectors;
 
 internal sealed class DeviceInfoCollector(ISmartctlRunner smartctlRunner) : IDeviceMetricCollector
 {
-    public int Priority => 10;
+    // Run first in the pipeline to initialize serial number for other collectors
+    public int Priority => int.MinValue;
 
     public async ValueTask<bool> TryCollectAsync(Device device, PrometheusBuilder prometheus, CancellationToken cancellationToken)
     {
-        // Use cached device info if available to avoid duplicate smartctl call
-        SmartctlDeviceInfo deviceInfo = device.CachedDeviceInfo 
-            ?? await smartctlRunner.RunAsync<SmartctlDeviceInfo>(["--info"], device.Name, cancellationToken);
+        SmartctlDeviceInfo deviceInfo = await smartctlRunner.RunAsync<SmartctlDeviceInfo>(["--info"], device.Name, cancellationToken);
+        
+        // Lazy-initialize serial number in the device object for subsequent collectors
+        if (!string.IsNullOrWhiteSpace(deviceInfo.SerialNumber))
+        {
+            device.SerialNumber = deviceInfo.SerialNumber;
+        }
         
         PrometheusLabel disk = Prometheus.Label("disk", device.Name);
         PrometheusLabel type = Prometheus.Label("type", device.Type);
@@ -26,8 +31,7 @@ internal sealed class DeviceInfoCollector(ISmartctlRunner smartctlRunner) : IDev
         labels.AddIfNotNull("model_family", deviceInfo.ModelFamily);
         labels.AddIfNotNull("model_name", deviceInfo.ModelName);
         labels.AddIfNotNull("device_model", deviceInfo.DeviceModel);
-        // Use serial number from device if available, otherwise from deviceInfo
-        labels.AddIfNotNull("serial_number", device.SerialNumber ?? deviceInfo.SerialNumber);
+        labels.AddIfNotNull("serial_number", deviceInfo.SerialNumber);
         labels.AddIfNotNull("firmware_version", deviceInfo.FirmwareVersion);
         labels.AddIfNotNull("vendor", deviceInfo.Vendor);
         labels.AddIfNotNull("product", deviceInfo.Product);

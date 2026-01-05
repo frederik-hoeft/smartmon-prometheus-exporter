@@ -43,27 +43,9 @@ internal sealed class SmartCollector(IConfiguration configuration, ISmartctlRunn
         }
         foreach (Device device in devices)
         {
-            // Fetch device info to get serial number before running collectors
-            Device deviceWithSerial = device;
-            try
-            {
-                SmartctlDeviceInfo deviceInfo = await smartctlRunner.RunAsync<SmartctlDeviceInfo>(["--info"], device.Name, cancellationToken);
-                // Update device with serial number and cache device info to avoid duplicate calls
-                deviceWithSerial = device with 
-                { 
-                    SerialNumber = string.IsNullOrWhiteSpace(deviceInfo.SerialNumber) ? null : deviceInfo.SerialNumber,
-                    CachedDeviceInfo = deviceInfo
-                };
-            }
-            catch
-            {
-                // If we can't get device info, continue with the device without serial number
-                // This ensures the exporter is robust even if some devices don't support --info
-            }
-
             foreach (IDeviceMetricCollector diskMetricCollector in _diskMetricCollectors)
             {
-                bool success = await diskMetricCollector.TryCollectAsync(deviceWithSerial, prometheus, cancellationToken);
+                bool success = await diskMetricCollector.TryCollectAsync(device, prometheus, cancellationToken);
                 if (!success)
                 {
                     break;
