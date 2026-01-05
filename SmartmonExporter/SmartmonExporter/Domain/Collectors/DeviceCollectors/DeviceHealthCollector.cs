@@ -25,13 +25,16 @@ internal sealed class DeviceHealthCollector(ISmartctlRunner smartctlRunner) : ID
     public async ValueTask<bool> TryCollectAsync(Device device, PrometheusBuilder prometheus, CancellationToken cancellationToken)
     {
         SmartctlDeviceHealth deviceHealth = await smartctlRunner.RunAsync<SmartctlDeviceHealth>(["--health"], device.Name, cancellationToken);
+        
+        PrometheusLabel? serialLabel = Prometheus.OptionalLabel("serial_number", device.SerialNumber);
+        
         prometheus.AddMetric("smart_status_summary", Prometheus.Gauge("SMART status summary"), includeTimeStamp: false, samples =>
         {
             DiskHealth health = DiskHealth.Ok;
-            // + 1 for the overall health status + 2 for the disk and type labels
-            int length = StatusFlags.Length + 1 + 2;
-            PrometheusLabel[] buffer = ArrayPool<PrometheusLabel>.Shared.Rent(length);
-            Span<PrometheusLabel> labels = buffer.AsSpan(0, length);
+            // Maximum size: StatusFlags + 1 for health + 2 for disk/type + 1 for optional serial_number
+            int maxLength = StatusFlags.Length + 1 + 2 + 1;
+            PrometheusLabel?[] buffer = ArrayPool<PrometheusLabel?>.Shared.Rent(maxLength);
+            Span<PrometheusLabel?> labels = buffer.AsSpan();
             int i = 0;
             for (; i < StatusFlags.Length; ++i)
             {
@@ -58,12 +61,15 @@ internal sealed class DeviceHealthCollector(ISmartctlRunner smartctlRunner) : ID
             }
             labels[i++] = Prometheus.Label("health", GetHealthStatus(health));
             labels[i++] = Prometheus.Label("disk", device.Name);
-            labels[i] = Prometheus.Label("type", device.Type);
-            samples.AddSample(value: health is DiskHealth.Ok or DiskHealth.Degraded, labels);
-            ArrayPool<PrometheusLabel>.Shared.Return(buffer);
+            labels[i++] = Prometheus.Label("type", device.Type);
+            labels[i++] = serialLabel;
+            
+            samples.AddSample(value: health is DiskHealth.Ok or DiskHealth.Degraded, labels[..i]);
+            ArrayPool<PrometheusLabel?>.Shared.Return(buffer);
         });
+
         prometheus.AddMetric("smart_status_passed", Prometheus.Gauge("SMART status passed"), includeTimeStamp: false, samples => samples
-            .AddSample(value: deviceHealth.SmartStatus?.Passed is true, Prometheus.Label("disk", device.Name), Prometheus.Label("type", device.Type)));
+            .AddSample(value: deviceHealth.SmartStatus?.Passed is true, Prometheus.Label("disk", device.Name), Prometheus.Label("type", device.Type), serialLabel));
         return deviceHealth.SmartStatus is not null;
     }
 

@@ -25,19 +25,21 @@ internal sealed partial class AtaDeviceAttributeCollector(ISmartctlRunner smartc
         SmartctlAtaDeviceAttributes deviceAttributes = await smartctlRunner.RunAsync<SmartctlAtaDeviceAttributes>(["--attributes"], device.Name, cancellationToken);
         PrometheusLabel disk = Prometheus.Label("disk", device.Name);
         PrometheusLabel type = Prometheus.Label("type", device.Type);
+        PrometheusLabel? serialLabel = Prometheus.OptionalLabel("serial_number", device.SerialNumber);
+        
         foreach (AtaDeviceAttribute attribute in deviceAttributes.AtaSmartAttributes.Table)
         {
             string normalizedName = attribute.Name.Replace('-', '_').ToLowerInvariant();
             PrometheusLabel id = Prometheus.Label("smart_id", attribute.Id);
 
             prometheus.AddMetric($"{normalizedName}_value", Prometheus.Gauge("Device attribute value"), includeTimeStamp: false, samples => samples
-                .AddSample(value: attribute.Value, disk, type, id));
+                .AddSample(value: attribute.Value, disk, type, id, serialLabel));
 
             prometheus.AddMetric($"{normalizedName}_worst", Prometheus.Gauge("Device attribute worst"), includeTimeStamp: false, samples => samples
-                .AddSample(value: attribute.Worst, disk, type, id));
+                .AddSample(value: attribute.Worst, disk, type, id, serialLabel));
 
             prometheus.AddMetric($"{normalizedName}_threshold", Prometheus.Gauge("Device attribute threshold"), includeTimeStamp: false, samples => samples
-                .AddSample(value: attribute.Threshold, disk, type, id));
+                .AddSample(value: attribute.Threshold, disk, type, id, serialLabel));
 
             string rawValue = attribute.Raw.String;
             Match match = RawNumberRegex.Match(attribute.Raw.String);
@@ -46,13 +48,13 @@ internal sealed partial class AtaDeviceAttributeCollector(ISmartctlRunner smartc
                 rawValue = match.Groups["num"].Value;
             }
             prometheus.AddMetric($"{normalizedName}_raw_value", Prometheus.Gauge("Device attribute raw value"), includeTimeStamp: false, samples => samples
-                .AddSample(value: rawValue, disk, type, id));
+                .AddSample(value: rawValue, disk, type, id, serialLabel));
         }
 
         if (deviceAttributes.AtaSmartAttributes.Temperature is Temperature temperature)
         {
             prometheus.AddMetric("temperature_current", Prometheus.Gauge("Current device temperature"), includeTimeStamp: false, samples => samples
-                .AddSample(value: temperature.Current, disk, type));
+                .AddSample(value: temperature.Current, disk, type, serialLabel));
         }
 
         return true; // Successfully collected
