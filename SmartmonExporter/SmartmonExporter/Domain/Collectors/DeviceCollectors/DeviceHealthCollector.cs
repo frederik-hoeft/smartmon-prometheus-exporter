@@ -60,15 +60,12 @@ internal sealed class DeviceHealthCollector(ISmartctlRunner smartctlRunner) : ID
             labels[i++] = Prometheus.Label("disk", device.Name);
             labels[i++] = Prometheus.Label("type", device.Type);
             
-            // Use actual length based on whether serial number is present
-            int actualLength = i;
             if (!string.IsNullOrWhiteSpace(device.SerialNumber))
             {
                 labels[i++] = Prometheus.Label("serial_number", device.SerialNumber);
-                actualLength = i;
             }
             
-            samples.AddSample(value: health is DiskHealth.Ok or DiskHealth.Degraded, labels[..actualLength]);
+            samples.AddSample(value: health is DiskHealth.Ok or DiskHealth.Degraded, labels[..i]);
             ArrayPool<PrometheusLabel>.Shared.Return(buffer);
         });
 

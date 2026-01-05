@@ -48,11 +48,12 @@ internal sealed class SmartCollector(IConfiguration configuration, ISmartctlRunn
             try
             {
                 SmartctlDeviceInfo deviceInfo = await smartctlRunner.RunAsync<SmartctlDeviceInfo>(["--info"], device.Name, cancellationToken);
-                // Update device with serial number if available
-                if (!string.IsNullOrWhiteSpace(deviceInfo.SerialNumber))
-                {
-                    deviceWithSerial = device with { SerialNumber = deviceInfo.SerialNumber };
-                }
+                // Update device with serial number and cache device info to avoid duplicate calls
+                deviceWithSerial = device with 
+                { 
+                    SerialNumber = string.IsNullOrWhiteSpace(deviceInfo.SerialNumber) ? null : deviceInfo.SerialNumber,
+                    CachedDeviceInfo = deviceInfo
+                };
             }
             catch
             {

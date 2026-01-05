@@ -1,3 +1,3 @@
 ﻿namespace SmartmonExporter.Domain.Interop.Output.Model;
 
-internal sealed record Device(string Name, string InfoName, string Type, string Protocol, string? SerialNumber = null);
+internal sealed record Device(string Name, string InfoName, string Type, string Protocol, string? SerialNumber = null, SmartctlDeviceInfo? CachedDeviceInfo = null);

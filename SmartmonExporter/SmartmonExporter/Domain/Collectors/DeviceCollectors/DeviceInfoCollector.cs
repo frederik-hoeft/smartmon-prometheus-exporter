@@ -11,7 +11,10 @@ internal sealed class DeviceInfoCollector(ISmartctlRunner smartctlRunner) : IDev
 
     public async ValueTask<bool> TryCollectAsync(Device device, PrometheusBuilder prometheus, CancellationToken cancellationToken)
     {
-        SmartctlDeviceInfo deviceInfo = await smartctlRunner.RunAsync<SmartctlDeviceInfo>(["--info"], device.Name, cancellationToken);
+        // Use cached device info if available to avoid duplicate smartctl call
+        SmartctlDeviceInfo deviceInfo = device.CachedDeviceInfo 
+            ?? await smartctlRunner.RunAsync<SmartctlDeviceInfo>(["--info"], device.Name, cancellationToken);
+        
         PrometheusLabel disk = Prometheus.Label("disk", device.Name);
         PrometheusLabel type = Prometheus.Label("type", device.Type);
         List<PrometheusLabel> labels =
