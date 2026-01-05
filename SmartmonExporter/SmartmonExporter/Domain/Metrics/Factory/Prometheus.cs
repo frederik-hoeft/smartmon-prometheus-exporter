@@ -9,7 +9,6 @@ public static class Prometheus
 
     public static PrometheusLabel Label<T>(string name, T value) where T : INumber<T> => new(name, $"{value}");
 
-    [return: NotNullIfNotNull(nameof(value))]
     public static PrometheusLabel? OptionalLabel(string name, string? value) =>
         !string.IsNullOrWhiteSpace(value) ? new PrometheusLabel(name, value) : null;
 
