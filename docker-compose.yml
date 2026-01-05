@@ -29,7 +29,7 @@ services:
       start_period: 10s
 
   node-exporter:
-    image: prom/node-exporter:v1.7.0
+    image: prom/node-exporter:v1.10.2
     container_name: smartctl-node-exporter
     restart: unless-stopped
     user: '1000:1000'
