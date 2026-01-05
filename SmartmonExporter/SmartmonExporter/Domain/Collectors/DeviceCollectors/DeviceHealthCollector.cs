@@ -26,9 +26,7 @@ internal sealed class DeviceHealthCollector(ISmartctlRunner smartctlRunner) : ID
     {
         SmartctlDeviceHealth deviceHealth = await smartctlRunner.RunAsync<SmartctlDeviceHealth>(["--health"], device.Name, cancellationToken);
         
-        PrometheusLabel? serialLabel = !string.IsNullOrWhiteSpace(device.SerialNumber) 
-            ? Prometheus.Label("serial_number", device.SerialNumber) 
-            : null;
+        PrometheusLabel? serialLabel = Prometheus.OptionalLabel("serial_number", device.SerialNumber);
         
         prometheus.AddMetric("smart_status_summary", Prometheus.Gauge("SMART status summary"), includeTimeStamp: false, samples =>
         {

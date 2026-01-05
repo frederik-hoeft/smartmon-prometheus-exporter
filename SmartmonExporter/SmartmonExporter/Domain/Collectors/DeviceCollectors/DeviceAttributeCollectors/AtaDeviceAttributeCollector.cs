@@ -25,9 +25,7 @@ internal sealed partial class AtaDeviceAttributeCollector(ISmartctlRunner smartc
         SmartctlAtaDeviceAttributes deviceAttributes = await smartctlRunner.RunAsync<SmartctlAtaDeviceAttributes>(["--attributes"], device.Name, cancellationToken);
         PrometheusLabel disk = Prometheus.Label("disk", device.Name);
         PrometheusLabel type = Prometheus.Label("type", device.Type);
-        PrometheusLabel? serialLabel = !string.IsNullOrWhiteSpace(device.SerialNumber) 
-            ? Prometheus.Label("serial_number", device.SerialNumber) 
-            : null;
+        PrometheusLabel? serialLabel = Prometheus.OptionalLabel("serial_number", device.SerialNumber);
         
         foreach (AtaDeviceAttribute attribute in deviceAttributes.AtaSmartAttributes.Table)
         {

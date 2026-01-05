@@ -23,24 +23,15 @@ internal sealed class DeviceInfoCollector(ISmartctlRunner smartctlRunner) : IDev
         
         PrometheusLabel disk = Prometheus.Label("disk", device.Name);
         PrometheusLabel type = Prometheus.Label("type", device.Type);
-        PrometheusLabel? modelFamily = !string.IsNullOrWhiteSpace(deviceInfo.ModelFamily) 
-            ? Prometheus.Label("model_family", deviceInfo.ModelFamily) : null;
-        PrometheusLabel? modelName = !string.IsNullOrWhiteSpace(deviceInfo.ModelName) 
-            ? Prometheus.Label("model_name", deviceInfo.ModelName) : null;
-        PrometheusLabel? deviceModel = !string.IsNullOrWhiteSpace(deviceInfo.DeviceModel) 
-            ? Prometheus.Label("device_model", deviceInfo.DeviceModel) : null;
-        PrometheusLabel? serialLabel = !string.IsNullOrWhiteSpace(device.SerialNumber) 
-            ? Prometheus.Label("serial_number", device.SerialNumber) : null;
-        PrometheusLabel? firmwareVersion = !string.IsNullOrWhiteSpace(deviceInfo.FirmwareVersion) 
-            ? Prometheus.Label("firmware_version", deviceInfo.FirmwareVersion) : null;
-        PrometheusLabel? vendor = !string.IsNullOrWhiteSpace(deviceInfo.Vendor) 
-            ? Prometheus.Label("vendor", deviceInfo.Vendor) : null;
-        PrometheusLabel? product = !string.IsNullOrWhiteSpace(deviceInfo.Product) 
-            ? Prometheus.Label("product", deviceInfo.Product) : null;
-        PrometheusLabel? revision = !string.IsNullOrWhiteSpace(deviceInfo.Revision) 
-            ? Prometheus.Label("revision", deviceInfo.Revision) : null;
-        PrometheusLabel? lunId = !string.IsNullOrWhiteSpace(deviceInfo.LunId) 
-            ? Prometheus.Label("lun_id", deviceInfo.LunId) : null;
+        PrometheusLabel? modelFamily = Prometheus.OptionalLabel("model_family", deviceInfo.ModelFamily);
+        PrometheusLabel? modelName = Prometheus.OptionalLabel("model_name", deviceInfo.ModelName);
+        PrometheusLabel? deviceModel = Prometheus.OptionalLabel("device_model", deviceInfo.DeviceModel);
+        PrometheusLabel? serialLabel = Prometheus.OptionalLabel("serial_number", device.SerialNumber);
+        PrometheusLabel? firmwareVersion = Prometheus.OptionalLabel("firmware_version", deviceInfo.FirmwareVersion);
+        PrometheusLabel? vendor = Prometheus.OptionalLabel("vendor", deviceInfo.Vendor);
+        PrometheusLabel? product = Prometheus.OptionalLabel("product", deviceInfo.Product);
+        PrometheusLabel? revision = Prometheus.OptionalLabel("revision", deviceInfo.Revision);
+        PrometheusLabel? lunId = Prometheus.OptionalLabel("lun_id", deviceInfo.LunId);
 
         prometheus.AddMetric("device_info", Prometheus.Gauge("Device information"), includeTimeStamp: false, samples => samples
             .AddSample(value: true, disk, type, modelFamily, modelName, deviceModel, serialLabel, firmwareVersion, vendor, product, revision, lunId));

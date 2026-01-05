@@ -52,13 +52,13 @@ public class PrometheusMetricBuilder(PrometheusMetric metric, bool includeTimeSt
                 }
                 first = false;
                 
-                PrometheusLabel label = nullableLabel.Value;
-                if (!PrometheusBuilder.PrometheusNameRegex.IsMatch(label.Name))
+                (string label, string labelValue) = nullableLabel.Value;
+                if (!PrometheusBuilder.PrometheusNameRegex.IsMatch(label))
                 {
-                    throw new ArgumentException($"Invalid label name '{label.Name}'");
+                    throw new ArgumentException($"Invalid label name '{label}'");
                 }
-                string escapedLabelValue = PrometheusMetric.Escape(label.Value);
-                builder.Append(label.Name).Append("=\"").Append(escapedLabelValue).Append('"');
+                string escapedLabelValue = PrometheusMetric.Escape(labelValue);
+                builder.Append(label).Append("=\"").Append(escapedLabelValue).Append('"');
             }
             builder.Append('}');
         }

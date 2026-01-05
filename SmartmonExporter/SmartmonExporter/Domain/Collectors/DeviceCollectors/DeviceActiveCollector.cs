@@ -14,9 +14,7 @@ internal sealed class DeviceActiveCollector(ISmartctlRunner smartctlRunner) : ID
         SmartctlDevice smartctlDevice = await smartctlRunner.RunAsync<SmartctlDevice>(["-n", "standby"], device.Name, cancellationToken);
         bool active = smartctlDevice.Smartctl.ExitStatus == 0;
 
-        PrometheusLabel? serialLabel = !string.IsNullOrWhiteSpace(device.SerialNumber) 
-            ? Prometheus.Label("serial_number", device.SerialNumber) 
-            : null;
+        PrometheusLabel? serialLabel = Prometheus.OptionalLabel("serial_number", device.SerialNumber);
 
         prometheus.AddMetric("device_active", Prometheus.Gauge("Device active status"), includeTimeStamp: false, samples => samples
             .AddSample(value: active, Prometheus.Label("disk", device.Name), Prometheus.Label("type", device.Type), serialLabel));

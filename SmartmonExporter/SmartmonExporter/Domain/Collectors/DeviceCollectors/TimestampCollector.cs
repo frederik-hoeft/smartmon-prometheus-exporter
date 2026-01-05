@@ -15,9 +15,7 @@ internal sealed class TimestampCollector : IDeviceMetricCollector
         string metricName = "smartctl_run";
         long timestamp = DateTimeOffset.UtcNow.ToUnixTimeSeconds();
 
-        PrometheusLabel? serialLabel = !string.IsNullOrWhiteSpace(device.SerialNumber) 
-            ? Prometheus.Label("serial_number", device.SerialNumber) 
-            : null;
+        PrometheusLabel? serialLabel = Prometheus.OptionalLabel("serial_number", device.SerialNumber);
 
         prometheus.AddMetric(metricName, Prometheus.Gauge("smartctl run timestamp"), includeTimeStamp: false, samples => samples
             .AddSample(value: timestamp, Prometheus.Label("disk", device.Name), Prometheus.Label("type", device.Type), serialLabel));
