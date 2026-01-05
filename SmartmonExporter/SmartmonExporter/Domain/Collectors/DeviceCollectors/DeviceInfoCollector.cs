@@ -31,7 +31,7 @@ internal sealed class DeviceInfoCollector(ISmartctlRunner smartctlRunner) : IDev
         labels.AddIfNotNull("model_family", deviceInfo.ModelFamily);
         labels.AddIfNotNull("model_name", deviceInfo.ModelName);
         labels.AddIfNotNull("device_model", deviceInfo.DeviceModel);
-        labels.AddIfNotNull("serial_number", deviceInfo.SerialNumber);
+        labels.AddIfNotNull("serial_number", device.SerialNumber);
         labels.AddIfNotNull("firmware_version", deviceInfo.FirmwareVersion);
         labels.AddIfNotNull("vendor", deviceInfo.Vendor);
         labels.AddIfNotNull("product", deviceInfo.Product);
