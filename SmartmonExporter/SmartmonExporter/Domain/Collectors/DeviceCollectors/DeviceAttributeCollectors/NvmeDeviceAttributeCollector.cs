@@ -22,31 +22,22 @@ internal sealed partial class NvmeDeviceAttributeCollector(ISmartctlRunner smart
         SmartctlNvmeDeviceAttributes deviceAttributes = await smartctlRunner.RunAsync<SmartctlNvmeDeviceAttributes>(["--attributes"], device.Name, cancellationToken);
         PrometheusLabel disk = Prometheus.Label("disk", device.Name);
         PrometheusLabel type = Prometheus.Label("type", device.Type);
+        PrometheusLabel? serialLabel = !string.IsNullOrWhiteSpace(device.SerialNumber) 
+            ? Prometheus.Label("serial_number", device.SerialNumber) 
+            : null;
         
         foreach ((string key, long value) in deviceAttributes.NvmeSmartHealthInformationLog)
         {
             string normalizedName = key.Replace('-', '_').ToLowerInvariant();
-            
-            List<PrometheusLabel> labels = [disk, type];
-            if (!string.IsNullOrWhiteSpace(device.SerialNumber))
-            {
-                labels.Add(Prometheus.Label("serial_number", device.SerialNumber));
-            }
 
             prometheus.AddMetric(normalizedName, Prometheus.Gauge($"NVMe SMART health information log entry {key}"), includeTimeStamp: false, samples => samples
-                .AddSample(value, [.. labels]));
+                .AddSample(value, disk, type, serialLabel));
         }
 
         if (deviceAttributes.Temperature is Temperature temperature)
         {
-            List<PrometheusLabel> tempLabels = [disk, type];
-            if (!string.IsNullOrWhiteSpace(device.SerialNumber))
-            {
-                tempLabels.Add(Prometheus.Label("serial_number", device.SerialNumber));
-            }
-
             prometheus.AddMetric("temperature_current", Prometheus.Gauge("Current device temperature"), includeTimeStamp: false, samples => samples
-                .AddSample(value: temperature.Current, [.. tempLabels]));
+                .AddSample(value: temperature.Current, disk, type, serialLabel));
         }
 
         return true; // Successfully collected
