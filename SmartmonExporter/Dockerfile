@@ -6,16 +6,12 @@ ARG LAUNCHING_FROM_VS
 ARG FINAL_BASE_IMAGE=${LAUNCHING_FROM_VS:+aotdebug}
 
 # This stage is used when running from VS in fast mode (Default for Debug configuration)
-FROM mcr.microsoft.com/dotnet/runtime:9.0-bookworm-slim AS base
+FROM mcr.microsoft.com/dotnet/runtime:10.0-noble AS base
 USER $APP_UID
 WORKDIR /app
 
 # This stage is used to build the service project
-FROM mcr.microsoft.com/dotnet/sdk:9.0-bookworm-slim AS build
-# Install clang/zlib1g-dev dependencies for publishing to native
-RUN apt-get update \
-    && apt-get install -y --no-install-recommends \
-    clang zlib1g-dev
+FROM mcr.microsoft.com/dotnet/sdk:10.0-noble-aot AS build
 ARG BUILD_CONFIGURATION=Release
 WORKDIR /src
 COPY . .
@@ -37,11 +33,11 @@ RUN apt-get update \
 USER app
 
 # This stage is used in production or when running from VS in regular mode (Default when not using the Debug configuration)
-FROM ${FINAL_BASE_IMAGE:-mcr.microsoft.com/dotnet/runtime-deps:9.0-bookworm-slim} AS final
+FROM ${FINAL_BASE_IMAGE:-mcr.microsoft.com/dotnet/runtime-deps:10.0-alpine} AS final
 
 # Install smartmontools
 USER root
-RUN apt-get update && apt-get install -y --no-install-recommends smartmontools
+RUN apk add --no-cache smartmontools
 
 WORKDIR /app
 COPY --from=publish /app/publish .
