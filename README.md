@@ -56,7 +56,7 @@ The final binary will be located at `./bin/smartmon-exporter`.
 
 ### Local Deployment (Windows)
 
-To build the Smartmon Prometheus Exporter locally on Windows, you will need to install the latest [.NET 9 SDK](https://dotnet.microsoft.com/en-us/download/dotnet/9.0). Then, run the following commands in PowerShell:
+To build the Smartmon Prometheus Exporter locally on Windows, you will need to install the latest [.NET 10 SDK](https://dotnet.microsoft.com/en-us/download/dotnet/10.0). Then, run the following commands in PowerShell:
 
 ```powershell
 git clone https://github.com/frederik-hoeft/smartmon-prometheus-exporter.git
